@@ -722,3 +722,5 @@ async function loadTicketsByTecnico(tecnicoNome) {
     console.error("Erro ao carregar chamados do técnico:", error);
   }
 }
+
+

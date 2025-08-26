@@ -607,11 +607,108 @@ body {
   }
 }
 
-
 .btn-comment {
   margin-top: 10px;
 }
 
 .btn-tecnico {
   margin-top: 10px;
+}
+/* admin */
+.adminsection {
+  margin: 0 auto;
+  display: node;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9; /* Fundo mais suave */
+  border-radius: 10px; /* Bordas arredondadas */
+}
+
+.adminsection .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.adminsection .fa-cogs {
+  font-size: 30px;
+  margin-right: 10px;
+  color: #007bff; /* Cor do ícone */
+}
+
+.row-list {
+  display: flex;
+  flex-direction: row;
+  
+
+  gap: 90px; /* Espaçamento entre os elementos */
+}
+
+.tecnico-form {
+  width: 100%;
+  max-width: 400px; /* Largura máxima */
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px; /* Preenchimento interno */
+}
+
+.form-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333; /* Cor do título */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Espaçamento entre grupos */
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.submit-button {
+  background-color: #007bff; /* Cor do botão */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* Cor do botão ao passar o mouse */
+}
+
+.row-tec {
+  width: 100%;
+  max-width: 400px; /* Largura máxima */;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px; /* Preenchimento interno */
+}
+
+.tecnicos-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tecnicos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Espaçamento entre técnicos */
 }
