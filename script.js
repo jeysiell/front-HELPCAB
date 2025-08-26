@@ -199,17 +199,29 @@ function displayTickets(tickets) {
 
 async function createTicket(ticketData) {
   try {
-    await apiRequest("/tickets", {
+    const response = await apiRequest("/tickets", {
       method: "POST",
       body: JSON.stringify(ticketData),
     });
 
-    showToast("Chamado criado com sucesso!", "success");
+    // 🔥 Pegar o protocolo retornado pela API
+    const protocolo = response?.ticket?.protocolo;
+
+    if (protocolo) {
+      showToast(
+        `Chamado criado com sucesso! Protocolo: ${protocolo}`,
+        "success"
+      );
+    } else {
+      showToast("Chamado criado com sucesso!", "success");
+    }
+
     newTicketForm.reset();
     loadTickets();
     showSection("tickets");
   } catch (error) {
     console.error("Erro ao criar chamado:", error);
+    showToast("Erro ao criar chamado!", "error");
   }
 }
 
@@ -243,64 +255,77 @@ async function openTicketModal(ticketId) {
     }
 
     // Display ticket details
+    // Display ticket details
     ticketDetails.innerHTML = `
-            <div class="detail-row">
-                <span class="detail-label">ID:</span>
-                <span class="detail-value">#${ticket.id}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Título:</span>
-                <span class="detail-value">${ticket.titulo}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Categoria:</span>
-                <span class="detail-value">${ticket.categoria}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Prioridade:</span>
-                <span class="detail-value priority-badge ${getPriorityClass(
-                  ticket.prioridade
-                )}">${ticket.prioridade}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Status:</span>
-                <span class="detail-value ticket-status ${getStatusClass(
-                  ticket.status
-                )}">${ticket.status}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Departamento:</span>
-                <span class="detail-value">${ticket.departamento}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Solicitante:</span>
-                <span class="detail-value">${ticket.solicitante}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Técnico:</span>
-                <span class="detail-value">${
-                  ticket.tecnicoResponsavel || "Não atribuído"
-                }</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Criado:</span>
-                <span class="detail-value">${formatDate(
-                  ticket.dataAbertura
-                )}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Atualizado:</span>
-                <span class="detail-value">${
-                  ticket.dataAtualizacao
-                    ? formatDate(ticket.dataAtualizacao)
-                    : "Nunca"
-                }</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Descrição:</span>
-                <span class="detail-value">${ticket.descricao}</span>
-            </div>
-        `;
+  <div class="detail-row">
+      <span class="detail-label">ID:</span>
+      <span class="detail-value">#${ticket.id}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Título:</span>
+      <span class="detail-value">${ticket.titulo}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Categoria:</span>
+      <span class="detail-value">${ticket.categoria}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Prioridade:</span>
+      <span class="detail-value priority-badge ${getPriorityClass(
+        ticket.prioridade
+      )}">
+        ${ticket.prioridade}
+      </span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Status:</span>
+      <span class="detail-value ticket-status ${getStatusClass(ticket.status)}">
+        ${ticket.status}
+      </span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Departamento:</span>
+      <span class="detail-value">${ticket.departamento}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Setor:</span>
+      <span class="detail-value">${ticket.setor}</span>
+  </div>
+  ${
+    ticket.detalheSetor
+      ? `
+      <div class="detail-row">
+        <span class="detail-label">Detalhe do Setor:</span>
+        <span class="detail-value">${ticket.detalheSetor}</span>
+      </div>
+      `
+      : ""
+  }
+  <div class="detail-row">
+      <span class="detail-label">Solicitante:</span>
+      <span class="detail-value">${ticket.solicitante}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Técnico:</span>
+      <span class="detail-value">${
+        ticket.tecnicoResponsavel || "Não atribuído"
+      }</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Criado:</span>
+      <span class="detail-value">${formatDate(ticket.dataAbertura)}</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Atualizado:</span>
+      <span class="detail-value">${
+        ticket.dataAtualizacao ? formatDate(ticket.dataAtualizacao) : "Nunca"
+      }</span>
+  </div>
+  <div class="detail-row">
+      <span class="detail-label">Descrição:</span>
+      <span class="detail-value">${ticket.descricao}</span>
+  </div>
+`;
 
     // Set current values in status update form
     document.getElementById("newStatus").value = ticket.status;
@@ -632,7 +657,6 @@ function showDashboard() {
     adminSection.classList.remove("active"); // não aparece
   }
 }
-
 
 async function loadTecnicos() {
   if (!tecnicosList || !tecnicoInput) return; // evita erro se elementos não existirem

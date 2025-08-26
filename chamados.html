@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chamados - Abertura e Consulta</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --muted: #94a3b8;
+        --text: #e5e7eb;
+        --ok: #10b981;
+        --err: #ef4444;
+        --accent: #3b82f6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.4 system-ui, -apple-system, Segoe UI, Roboto;
+      }
+
+      /* navbar fixa */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--card);
+        border-bottom: 1px solid #1f2937;
+        display: flex;
+        gap: 20px;
+        padding: 12px 24px;
+        z-index: 100;
+      }
+      .navbar button {
+        background: transparent;
+        border: 0;
+        color: var(--muted);
+        font-size: 15px;
+        cursor: pointer;
+      }
+      .navbar button.active {
+        color: var(--accent);
+        font-weight: bold;
+      }
+
+      .wrap {
+        max-width: 1100px;
+        margin: 80px auto 24px;
+        padding: 0 16px;
+      } /* espaço abaixo da navbar */
+      h1 {
+        font-size: 22px;
+        margin: 0 0 18px;
+      }
+      h2 {
+        font-size: 18px;
+        margin: 18px 0;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid #1f2937;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+      }
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        background: #0b1220;
+        border: 1px solid #263042;
+        border-radius: 10px;
+        color: var(--text);
+        padding: 10px 12px;
+      }
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 16px;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid #22304a;
+        color: var(--text);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .toast {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        background: #0b1220;
+        border: 1px solid #22304a;
+        border-radius: 12px;
+        padding: 10px 14px;
+      }
+      .toast.ok {
+        border-color: var(--ok);
+      }
+      .toast.err {
+        border-color: var(--err);
+      }
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .item {
+        background: #0b1220;
+        border: 1px solid #22304a;
+        border-radius: 12px;
+        padding: 12px;
+      }
+      .item .head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid #22304a;
+      }
+      .status {
+        border-color: #334155;
+      }
+      .prio-alta {
+        border-color: #ef4444;
+        color: #ef4444;
+      }
+      .prio-media {
+        border-color: #f59e0b;
+        color: #f59e0b;
+      }
+      .prio-baixa {
+        border-color: #10b981;
+        color: #10b981;
+      }
+      .protocol {
+        font-weight: 700;
+      }
+      .helper {
+        font-size: 12px;
+        color: #9aa7bd;
+        margin-top: 4px;
+      }
+      dialog {
+        border: 0;
+        border-radius: 16px;
+        padding: 0;
+        max-width: 420px;
+        width: calc(100vw - 40px);
+      }
+      dialog .dlg {
+        background: var(--card);
+        color: var(--text);
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid #1f2937;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      /* controle de seções */
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navbar -->
+    <div class="navbar">
+      <button id="navAbrir" class="active">Abrir Chamado</button>
+      <button id="navConsultar">Consultar Chamado</button>
+    </div>
+
+    <div class="wrap">
+      <h1>Portal de Chamados</h1>
+
+      <!-- Abrir chamado -->
+      <section id="secAbrir" class="card section active">
+        <h2>Abrir chamado</h2>
+        <form id="formAbrir">
+          <label for="solicitante">Seu nome (solicitante)</label>
+          <input id="solicitante" name="solicitante" required />
+
+          <label for="titulo">Título</label>
+          <input id="titulo" name="titulo" required />
+
+          <div class="row">
+            <div>
+              <label for="categoria">Categoria</label>
+              <select id="categoria" name="categoria" required>
+                <option value="">Selecione…</option>
+                <option value="hardware">Hardware</option>
+                <option value="software">Software</option>
+                <option value="rede">Rede</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            <div>
+              <label for="prioridade">Prioridade</label>
+              <select id="prioridade" name="prioridade" required>
+                <option value="">Selecione…</option>
+                <option value="baixa">baixa</option>
+                <option value="media">media</option>
+                <option value="alta">alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="departamento">Departamento</label>
+              <input
+                id="departamento"
+                name="departamento"
+                type="text"
+                value="TI"
+                readonly
+              />
+            </div>
+            <div>
+              <label for="setor">Setor</label>
+              <select id="setor" name="setor" required>
+                <option value="">Selecione…</option>
+                <option value="administracao">Administração</option>
+                <option value="salas">Salas</option>
+                <option value="coordenacao">Coordenação</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="setorDetalheContainer"></div>
+
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" name="descricao" required></textarea>
+
+          <div class="toolbar">
+            <button class="btn btn-primary" type="submit" id="btnAbrir">
+              Enviar chamado
+            </button>
+            <span class="muted"
+              >O técnico responsável será atribuído automaticamente pelo
+              setor.</span
+            >
+          </div>
+        </form>
+      </section>
+
+      <!-- Consultar -->
+      <section id="secConsultar" class="card section">
+        <h2>Consultar chamados</h2>
+        <div class="row">
+          <div>
+            <label for="buscaProtocolo">Por protocolo</label>
+            <input id="buscaProtocolo" placeholder="Ex.: 12345" />
+            <div class="helper">Consulta exata do número de protocolo.</div>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="btn btn-ghost" id="btnBuscarProtocolo">
+              Buscar
+            </button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 8px">
+          <div>
+            <label for="buscaSolicitante">Por solicitante</label>
+            <input id="buscaSolicitante" placeholder="Nome do solicitante" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="btn btn-ghost" id="btnBuscarSolicitante">
+              Buscar
+            </button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 8px">
+          <div>
+            <label for="dataDe">Data inicial</label>
+            <input id="dataDe" type="date" />
+          </div>
+          <div>
+            <label for="dataAte">Data final</label>
+            <input id="dataAte" type="date" />
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-ghost" id="btnBuscarDatas">
+            Buscar por data
+          </button>
+          <button class="btn" id="btnLimpar">Limpar</button>
+        </div>
+
+        <div id="resultados" class="list"></div>
+      </section>
+    </div>
+
+    <!-- Modal Protocolo -->
+    <dialog id="dlgProtocolo">
+      <div class="dlg">
+        <h2>Chamado aberto!</h2>
+        <p>Protocolo: <span id="protoNumero" class="protocol"></span></p>
+        <p class="muted">Guarde este número para consultar o andamento.</p>
+        <div style="margin-top: 12px; text-align: right">
+          <button class="btn btn-primary" id="btnDlgOk">OK</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" style="display: none"></div>
+
+    <script>
+      const API_BASE_URL = "https://helpcab.onrender.com/api";
+      const $ = (sel) => document.querySelector(sel);
+
+      // navbar toggle
+      const navAbrir = $("#navAbrir");
+      const navConsultar = $("#navConsultar");
+      const secAbrir = $("#secAbrir");
+      const secConsultar = $("#secConsultar");
+
+      navAbrir.addEventListener("click", () => {
+        navAbrir.classList.add("active");
+        navConsultar.classList.remove("active");
+        secAbrir.classList.add("active");
+        secConsultar.classList.remove("active");
+      });
+      navConsultar.addEventListener("click", () => {
+        navConsultar.classList.add("active");
+        navAbrir.classList.remove("active");
+        secConsultar.classList.add("active");
+        secAbrir.classList.remove("active");
+      });
+
+      // helpers
+      const toast = (msg, ok = true) => {
+        const el = $("#toast");
+        el.textContent = msg;
+        el.className = "toast " + (ok ? "ok" : "err");
+        el.style.display = "block";
+        setTimeout(() => {
+          el.style.display = "none";
+        }, 4000);
+      };
+      const formatDateTime = (ds) => {
+        if (!ds) return "-";
+        const d = new Date(ds);
+        if (isNaN(d)) return "-";
+        return d.toLocaleString("pt-BR");
+      };
+
+      // Campo detalhe do setor dinâmico
+      const setorSelect = $("#setor");
+      const detalheContainer = $("#setorDetalheContainer");
+      setorSelect.addEventListener("change", () => {
+        detalheContainer.innerHTML = "";
+        const setor = setorSelect.value;
+        if (setor === "salas") {
+          detalheContainer.innerHTML = `<label for="numeroSala">Número da Sala</label><input id="numeroSala" name="detalheSetor" required />`;
+        } else if (setor === "coordenacao") {
+          detalheContainer.innerHTML = `<label for="tipoCoordenacao">Tipo de Coordenação</label><select id="tipoCoordenacao" name="detalheSetor" required>
+          <option value="pedagogica">Pedagógica</option>
+          <option value="orientacao">Orientação</option>
+          <option value="administrativa">Administrativa</option>
+          <option value="outra">Outra</option>
+        </select>`;
+        }
+      });
+
+      // ABRIR CHAMADO
+      $("#formAbrir").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = {
+          titulo: fd.get("titulo"),
+          categoria: fd.get("categoria"),
+          prioridade: fd.get("prioridade"),
+          departamento: fd.get("departamento") || "TI",
+          setor: fd.get("setor"),
+          detalheSetor: fd.get("detalheSetor") || null,
+          descricao: fd.get("descricao"),
+          solicitante: fd.get("solicitante"),
+        };
+
+        try {
+          const r = await fetch(`${API_BASE_URL}/tickets`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.message || "Falha ao abrir chamado");
+
+          e.target.reset();
+          detalheContainer.innerHTML = "";
+
+          // Pegar protocolo dentro de ticket
+          const protocolo = data.ticket?.protocolo || "Não gerado";
+          const protoEl = $("#protoNumero");
+          protoEl.textContent = protocolo;
+
+          // Deixar cursor indicando que é clicável
+          protoEl.style.cursor = "pointer";
+
+          // Copiar para clipboard ao clicar
+          protoEl.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(protocolo);
+              toast("Protocolo copiado!", true);
+            } catch {
+              toast("Falha ao copiar o protocolo", false);
+            }
+          });
+
+          document.getElementById("dlgProtocolo").showModal();
+        } catch (err) {
+          toast(err.message, false);
+        }
+      });
+
+      $("#btnDlgOk").addEventListener("click", () => {
+        document.getElementById("dlgProtocolo").close();
+      });
+
+      // render resultados
+      const resultados = $("#resultados");
+      function renderLista(lista) {
+        resultados.innerHTML = "";
+        if (!lista || lista.length === 0) {
+          resultados.innerHTML = `<div class="muted">Nenhum chamado encontrado.</div>`;
+          return;
+        }
+        lista.forEach((t) => {
+          const prioClass =
+            t.prioridade === "alta"
+              ? "prio-alta"
+              : t.prioridade === "media"
+              ? "prio-media"
+              : "prio-baixa";
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+          <div class="head">
+            <div>
+              <div><span class="protocol">#${t.protocolo}</span> — ${
+            t.titulo
+          }</div>
+              <div class="muted">Solicitante: ${t.solicitante || "-"} | Dep: ${
+            t.departamento || "-"
+          } | Setor: ${t.setor || "-"}</div>
+              ${
+                t.detalheSetor
+                  ? `<div class="muted">Detalhe do setor: ${t.detalheSetor}</div>`
+                  : ``
+              }
+            </div>
+            <div>
+              <span class="badge status">${t.status}</span>
+              <span class="badge ${prioClass}">${t.prioridade}</span>
+            </div>
+          </div>
+          <div class="muted" style="margin-top:6px">Abertura: ${formatDateTime(
+            t.dataAbertura
+          )} | Atualização: ${formatDateTime(t.dataAtualizacao)}</div>
+          <div style="margin-top:8px">${t.descricao || ""}</div>
+          ${
+            t.tecnicoResponsavel
+              ? `<div class="muted" style="margin-top:6px">Técnico: ${t.tecnicoResponsavel}</div>`
+              : ``
+          }
+        `;
+          resultados.appendChild(el);
+        });
+      }
+
+      // BUSCAS
+      $("#btnBuscarProtocolo").addEventListener("click", async () => {
+        const p = $("#buscaProtocolo").value.trim();
+        if (!p) {
+          toast("Informe um protocolo", false);
+          return;
+        }
+        try {
+          const r = await fetch(
+            `${API_BASE_URL}/tickets/protocolo/${encodeURIComponent(p)}`
+          );
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.message || "Erro na busca");
+          renderLista(Array.isArray(data) ? data : data ? [data] : []);
+        } catch (err) {
+          toast(err.message, false);
+        }
+      });
+
+      $("#btnBuscarSolicitante").addEventListener("click", async () => {
+        const nome = $("#buscaSolicitante").value.trim();
+        if (!nome) {
+          toast("Informe o nome do solicitante", false);
+          return;
+        }
+        try {
+          const r = await fetch(
+            `${API_BASE_URL}/tickets/search?solicitante=${encodeURIComponent(
+              nome
+            )}`
+          );
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.message || "Erro na busca");
+          renderLista(data);
+        } catch (err) {
+          toast(err.message, false);
+        }
+      });
+
+      $("#btnBuscarDatas").addEventListener("click", async () => {
+        const de = $("#dataDe").value;
+        const ate = $("#dataAte").value;
+        if (!de && !ate) {
+          toast("Informe ao menos uma data", false);
+          return;
+        }
+        const qs = new URLSearchParams();
+        if (de) qs.set("de", de);
+        if (ate) qs.set("ate", ate);
+        try {
+          const r = await fetch(
+            `${API_BASE_URL}/tickets/search?${qs.toString()}`
+          );
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.message || "Erro na busca");
+          renderLista(data);
+        } catch (err) {
+          toast(err.message, false);
+        }
+      });
+
+      $("#btnLimpar").addEventListener("click", () => {
+        $("#buscaProtocolo").value = "";
+        $("#buscaSolicitante").value = "";
+        $("#dataDe").value = "";
+        $("#dataAte").value = "";
+        resultados.innerHTML = "";
+      });
+    </script>
+  </body>
+</html>
