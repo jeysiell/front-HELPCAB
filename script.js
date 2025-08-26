@@ -497,8 +497,24 @@ document.addEventListener("DOMContentLoaded", () => {
   updateStatusBtn.addEventListener("click", () => {
     if (!currentTicketId) return;
 
-    const status = document.getElementById("newStatus").value;
+    let status = document.getElementById("newStatus").value;
     const tecnico = document.getElementById("tecnicoResponsavel").value;
+
+    // Normaliza os valores para o banco
+    switch (status) {
+      case "aberto":
+        status = "Aberto";
+        break;
+      case "Em_andamento":
+        status = "Em andamento";
+        break;
+      case "resolvido":
+        status = "Resolvido";
+        break;
+      case "fechado":
+        status = "Fechado";
+        break;
+    }
 
     updateTicketStatus(currentTicketId, status, tecnico);
   });
