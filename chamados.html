@@ -288,10 +288,6 @@
             <button class="btn btn-primary" type="submit" id="btnAbrir">
               Enviar chamado
             </button>
-            <span class="muted"
-              >O técnico responsável será atribuído automaticamente pelo
-              setor.</span
-            >
           </div>
         </form>
       </section>
@@ -452,10 +448,10 @@
           const protoEl = $("#protoNumero");
           protoEl.textContent = protocolo;
 
-          // Deixar cursor indicando que é clicável
+          // Cursor indicando que é clicável
           protoEl.style.cursor = "pointer";
 
-          // Copiar para clipboard ao clicar
+          // Copiar ao clicar
           protoEl.addEventListener("click", async () => {
             try {
               await navigator.clipboard.writeText(protocolo);
