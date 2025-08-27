@@ -724,3 +724,7 @@ async function loadTicketsByTecnico(tecnicoNome) {
 }
 
 
+// Toggle menu no mobile
+document.getElementById("menuToggle")?.addEventListener("click", () => {
+  document.querySelector(".sidebar")?.classList.toggle("active");
+});

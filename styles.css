@@ -712,3 +712,98 @@ body {
   flex-direction: column;
   gap: 5px; /* Espaçamento entre técnicos */
 }
+
+
+
+/* Botão hamburguer (mobile) */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  /* Header fica mais compacto */
+  .dashboard-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+  }
+
+  .header-right {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* Botão hamburguer aparece */
+  .hamburger {
+    display: block;
+  }
+
+/* Sidebar como drawer */
+  .sidebar {
+    position: fixed;
+    top: 60px; /* altura do header */
+    left: -100%;
+    width: 220px;
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  /* Agora os itens ficam em coluna (um abaixo do outro) */
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    overflow-x: hidden;
+  }
+
+  .nav-item {
+    white-space: normal;
+    border-bottom: 1px solid #eee;
+  }
+
+  .nav-item.active {
+    border-bottom: 3px solid #667eea;
+    border-right: none;
+    background: #f8f9fa;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+
+  /* Formulários ocupam largura total */
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ajusta a tela de admin setores */
+  .row-list {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tecnico-form, .row-tec {
+    max-width: 100%;
+  }
+
+  /* Modal ocupa quase a tela toda */
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+}
