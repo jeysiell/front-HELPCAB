@@ -61,8 +61,12 @@ const tecnicoInput = document.getElementById("tecnicoInput");
 // =========================================================
 // 🛠️ Utility Functions
 // =========================================================
-function showLoading() { loadingSpinner.classList.add("active"); }
-function hideLoading() { loadingSpinner.classList.remove("active"); }
+function showLoading() {
+  loadingSpinner.classList.add("active");
+}
+function hideLoading() {
+  loadingSpinner.classList.remove("active");
+}
 
 function showToast(message, type = "info") {
   const toast = document.createElement("div");
@@ -73,9 +77,9 @@ function showToast(message, type = "info") {
 }
 
 function showScreen(screenName) {
-  document.querySelectorAll(".screen").forEach((screen) =>
-    screen.classList.remove("active")
-  );
+  document
+    .querySelectorAll(".screen")
+    .forEach((screen) => screen.classList.remove("active"));
   document.getElementById(screenName + "Screen").classList.add("active");
 }
 
@@ -83,8 +87,12 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleString("pt-BR");
 }
 
-function getPriorityClass(priority) { return `priority-${priority}`; }
-function getStatusClass(status) { return `status-${status}`; }
+function getPriorityClass(priority) {
+  return `priority-${priority}`;
+}
+function getStatusClass(status) {
+  return `status-${status}`;
+}
 
 // =========================================================
 // 🔌 API Functions
@@ -112,9 +120,10 @@ async function apiRequest(endpoint, options = {}) {
 // =========================================================
 // === MÁSCARA PARA TELEFONE NO CHECKOUT ===
 document.addEventListener("DOMContentLoaded", () => {
-  const checkoutTelefoneInputs = document.querySelectorAll(".checkout-telefone");
+  const checkoutTelefoneInputs =
+    document.querySelectorAll(".checkout-telefone");
 
-  checkoutTelefoneInputs.forEach(input => {
+  checkoutTelefoneInputs.forEach((input) => {
     input.addEventListener("input", () => {
       // Remover tudo que não for dígito
       let value = input.value.replace(/\D/g, "");
@@ -148,7 +157,6 @@ function telefoneEhValido(numeroFormatado) {
   return /^\d{11}$/.test(apenasNumeros) && apenasNumeros[2] === "9";
 }
 
-
 // =========================================================
 // 🔑 Authentication Functions
 // =========================================================
@@ -173,7 +181,10 @@ async function register(nome, telefone, senha, cargo) {
       method: "POST",
       body: JSON.stringify({ nome, telefone, senha, cargo }),
     });
-    showToast("Cadastro realizado com sucesso! Faça login para continuar.", "success");
+    showToast(
+      "Cadastro realizado com sucesso! Faça login para continuar.",
+      "success"
+    );
     showScreen("login");
   } catch (error) {
     console.error("Erro no cadastro:", error);
@@ -202,7 +213,8 @@ async function loadTickets() {
 function displayTickets(tickets) {
   ticketsList.innerHTML = "";
   if (tickets.length === 0) {
-    ticketsList.innerHTML = '<div class="no-tickets">Nenhum chamado encontrado</div>';
+    ticketsList.innerHTML =
+      '<div class="no-tickets">Nenhum chamado encontrado</div>';
     return;
   }
   tickets.forEach((ticket) => {
@@ -221,8 +233,12 @@ function displayTickets(tickets) {
           </div>
         </div>
         <div>
-          <span class="ticket-status ${getStatusClass(ticket.status)}">${ticket.status}</span>
-          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${ticket.prioridade}</span>
+          <span class="ticket-status ${getStatusClass(ticket.status)}">${
+      ticket.status
+    }</span>
+          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${
+      ticket.prioridade
+    }</span>
         </div>
       </div>
     `;
@@ -237,7 +253,12 @@ async function createTicket(ticketData) {
       body: JSON.stringify(ticketData),
     });
     const protocolo = response?.ticket?.protocolo;
-    showToast(protocolo ? `Chamado criado com sucesso! Protocolo: ${protocolo}` : "Chamado criado com sucesso!", "success");
+    showToast(
+      protocolo
+        ? `Chamado criado com sucesso! Protocolo: ${protocolo}`
+        : "Chamado criado com sucesso!",
+      "success"
+    );
     newTicketForm.reset();
     loadTickets();
     showSection("tickets");
@@ -264,7 +285,7 @@ async function updateTicketStatus(ticketId, status, tecnicoResponsavel) {
 // =========================================================
 // 🪟 Modal Functions
 // =========================================================
-async function openTicketModal(ticketId) { 
+async function openTicketModal(ticketId) {
   currentTicketId = ticketId;
 
   try {
@@ -369,12 +390,15 @@ async function openTicketModal(ticketId) {
   }
 }
 
-function closeTicketModal() { ticketModal.classList.remove("active"); currentTicketId = null; }
+function closeTicketModal() {
+  ticketModal.classList.remove("active");
+  currentTicketId = null;
+}
 
 // =========================================================
 // 💬 Comments Functions
 // =========================================================
-async function loadComments(ticketId) { 
+async function loadComments(ticketId) {
   try {
     const comments = await apiRequest(`/tickets/${ticketId}/comentarios`);
     displayComments(comments);
@@ -423,11 +447,10 @@ async function addComment(ticketId, autor, texto) {
   }
 }
 
-
 // =========================================================
 // 🧭 Navigation Functions
 // =========================================================
-function showSection(sectionName) { 
+function showSection(sectionName) {
   // Update navigation
   navItems.forEach((item) => {
     item.classList.remove("active");
@@ -563,8 +586,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && ticketModal.classList.contains("active")) closeTicketModal(); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && ticketModal.classList.contains("active"))
+    closeTicketModal();
+});
 setorSelect.addEventListener("change", () => {
   detalheContainer.innerHTML = ""; // limpa campos antigos
   const setor = setorSelect.value;
@@ -584,7 +609,8 @@ setorSelect.addEventListener("change", () => {
         <option value="outra">Outra</option>
       </select>
     `;
-  } });
+  }
+});
 
 // =========================================================
 // 👨‍🔧 Técnicos Functions
@@ -605,13 +631,27 @@ async function loadTecnicos() {
     `
       )
       .join("");
+     // Carrega todos os usuários com cargo técnico no select
+    const usersResponse = await fetch(
+      `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
+    );
+    const usersData = await usersResponse.json();
+
+    tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>'; // limpa
+    usersData.forEach((user) => {
+      const option = document.createElement("option");
+      option.value = user.nome;
+      option.textContent = user.nome;
+      tecnicoInput.appendChild(option);
+    });
   } catch (err) {
     tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
     console.error(err);
   }
 }
 
-if (setorTecnicoForm && setorSelectfor && tecnicoInput) { setorTecnicoForm.addEventListener("submit", async (e) => {
+if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
+  setorTecnicoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const setor = setorSelectfor.value;
@@ -637,9 +677,10 @@ if (setorTecnicoForm && setorSelectfor && tecnicoInput) { setorTecnicoForm.addEv
       showToast("Erro ao salvar técnico", "error");
       console.error(err);
     }
-}); }
+  });
+}
 
-document.addEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => {
   const savedUser = localStorage.getItem("currentUser");
   if (savedUser) {
     currentUser = JSON.parse(savedUser); // usa a variável global
@@ -653,7 +694,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // =========================================================
 // 📊 Dashboard
 // =========================================================
-function showDashboard() { 
+function showDashboard() {
   showScreen("dashboard");
   userInfo.textContent = `${currentUser.nome} (${currentUser.cargo})`;
 
@@ -712,4 +753,24 @@ document.getElementById("menuToggle")?.addEventListener("click", () => {
   document.querySelector(".sidebar")?.classList.toggle("active");
 });
 
+// testes unitários
 
+// Máscara de telefone (DDD + número)
+document
+  .getElementById("telefoneSolicitante")
+  .addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+
+    if (value.length > 11) value = value.slice(0, 11); 
+
+    if (value.length > 6) {
+      e.target.value = `(${value.slice(0, 2)}) ${value.slice(
+        2,
+        7
+      )}-${value.slice(7)}`;
+    } else if (value.length > 2) {
+      e.target.value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+    } else if (value.length > 0) {
+      e.target.value = `(${value}`;
+    }
+});

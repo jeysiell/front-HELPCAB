@@ -699,43 +699,43 @@ function showDashboard() {
   }
 }
 
-// async function loadTecnicos() {
-//   if (!tecnicosList || !tecnicoInput) return; // evita erro se elementos não existirem
+async function loadTecnico() {
+  if (!tecnicosList || !tecnicoInput) return; // evita erro se elementos não existirem
 
-//   try {
-//     // Pega técnicos já atribuídos a setores
-//     const response = await fetch(`${API_BASE_URL}/auth/setores-tecnicos`);
-//     const data = await response.json();
+  try {
+    // Pega técnicos já atribuídos a setores
+    const response = await fetch(`${API_BASE_URL}/auth/setores-tecnicos`);
+    const data = await response.json();
 
-//     // Lista na seção de técnicos por setor
-//     tecnicosList.innerHTML = data
-//       .map(
-//         (item) => `
-//         <div class="p-2 border rounded mb-2 flex justify-between items-center">
-//             <span><strong>${item.setor}:</strong> ${item.tecnico}</span>
-//         </div>
-//     `
-//       )
-//       .join("");
+    // Lista na seção de técnicos por setor
+    tecnicosList.innerHTML = data
+      .map(
+        (item) => `
+        <div class="p-2 border rounded mb-2 flex justify-between items-center">
+            <span><strong>${item.setor}:</strong> ${item.tecnico}</span>
+        </div>
+    `
+      )
+      .join("");
 
-//     // Carrega todos os usuários com cargo técnico no select
-//     const usersResponse = await fetch(
-//       `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
-//     );
-//     const usersData = await usersResponse.json();
+    // Carrega todos os usuários com cargo técnico no select
+    const usersResponse = await fetch(
+      `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
+    );
+    const usersData = await usersResponse.json();
 
-//     tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>'; // limpa
-//     usersData.forEach((user) => {
-//       const option = document.createElement("option");
-//       option.value = user.nome;
-//       option.textContent = user.nome;
-//       tecnicoInput.appendChild(option);
-//     });
-//   } catch (err) {
-//     tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
-//     console.error(err);
-//   }
-// }
+    tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>'; // limpa
+    usersData.forEach((user) => {
+      const option = document.createElement("option");
+      option.value = user.nome;
+      option.textContent = user.nome;
+      tecnicoInput.appendChild(option);
+    });
+  } catch (err) {
+    tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
+    console.error(err);
+  }
+}
 
 async function loadTicketsByTecnico(tecnicoNome) {
   try {
