@@ -1,31 +1,40 @@
-// API Configuration
+// =========================================================
+// 🌐 API Configuration
+// =========================================================
 const API_BASE_URL = "https://helpcab.onrender.com/api";
 
-// Global State
+// =========================================================
+// 🌍 Global State
+// =========================================================
 let currentUser = null;
 let currentTicketId = null;
 
-// DOM Elements
+// =========================================================
+// 📌 DOM Elements
+// =========================================================
+
+// Screens
 const loginScreen = document.getElementById("loginScreen");
 const registerScreen = document.getElementById("registerScreen");
 const dashboardScreen = document.getElementById("dashboardScreen");
+
+// Forms
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
+const newTicketForm = document.getElementById("newTicketForm");
+const commentForm = document.getElementById("commentForm");
+const setorTecnicoForm = document.getElementById("setorTecnicoForm");
+
+// Navigation
 const showRegisterLink = document.getElementById("showRegister");
 const showLoginLink = document.getElementById("showLogin");
 const logoutBtn = document.getElementById("logoutBtn");
-const userInfo = document.getElementById("userInfo");
-const loadingSpinner = document.getElementById("loadingSpinner");
-const toastContainer = document.getElementById("toastContainer");
-
-// Navigation
 const navItems = document.querySelectorAll(".nav-item");
 const contentSections = document.querySelectorAll(".content-section");
 
 // Tickets
 const ticketsList = document.getElementById("ticketsList");
 const refreshTicketsBtn = document.getElementById("refreshTickets");
-const newTicketForm = document.getElementById("newTicketForm");
 
 // Modal
 const ticketModal = document.getElementById("ticketModal");
@@ -33,35 +42,40 @@ const modalClose = document.querySelector(".modal-close");
 const ticketDetails = document.getElementById("ticketDetails");
 const statusUpdate = document.getElementById("statusUpdate");
 const updateStatusBtn = document.getElementById("updateStatus");
+
+// Comments
 const commentsList = document.getElementById("commentsList");
-const commentForm = document.getElementById("commentForm");
 
-// Utility Functions
-function showLoading() {
-  loadingSpinner.classList.add("active");
-}
+// User & UI
+const userInfo = document.getElementById("userInfo");
+const loadingSpinner = document.getElementById("loadingSpinner");
+const toastContainer = document.getElementById("toastContainer");
 
-function hideLoading() {
-  loadingSpinner.classList.remove("active");
-}
+// Setores & Técnicos
+const setorSelect = document.getElementById("setor");
+const detalheContainer = document.getElementById("setorDetalheContainer");
+const tecnicosList = document.getElementById("tecnicosList");
+const setorSelectfor = document.getElementById("setorSelectfor");
+const tecnicoInput = document.getElementById("tecnicoInput");
+
+// =========================================================
+// 🛠️ Utility Functions
+// =========================================================
+function showLoading() { loadingSpinner.classList.add("active"); }
+function hideLoading() { loadingSpinner.classList.remove("active"); }
 
 function showToast(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.textContent = message;
-
   toastContainer.appendChild(toast);
-
-  setTimeout(() => {
-    toast.remove();
-  }, 5000);
+  setTimeout(() => toast.remove(), 5000);
 }
 
 function showScreen(screenName) {
-  document.querySelectorAll(".screen").forEach((screen) => {
-    screen.classList.remove("active");
-  });
-
+  document.querySelectorAll(".screen").forEach((screen) =>
+    screen.classList.remove("active")
+  );
   document.getElementById(screenName + "Screen").classList.add("active");
 }
 
@@ -69,33 +83,21 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleString("pt-BR");
 }
 
-function getPriorityClass(priority) {
-  return `priority-${priority}`;
-}
+function getPriorityClass(priority) { return `priority-${priority}`; }
+function getStatusClass(status) { return `status-${status}`; }
 
-function getStatusClass(status) {
-  return `status-${status}`;
-}
-
-// API Functions
+// =========================================================
+// 🔌 API Functions
+// =========================================================
 async function apiRequest(endpoint, options = {}) {
   showLoading();
-
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+      headers: { "Content-Type": "application/json", ...options.headers },
       ...options,
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Erro na requisição");
-    }
-
+    if (!response.ok) throw new Error(data.message || "Erro na requisição");
     return data;
   } catch (error) {
     showToast(error.message, "error");
@@ -105,19 +107,59 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
+// =========================================================
+//  Number fomatter
+// =========================================================
+// === MÁSCARA PARA TELEFONE NO CHECKOUT ===
+document.addEventListener("DOMContentLoaded", () => {
+  const checkoutTelefoneInputs = document.querySelectorAll(".checkout-telefone");
+
+  checkoutTelefoneInputs.forEach(input => {
+    input.addEventListener("input", () => {
+      // Remover tudo que não for dígito
+      let value = input.value.replace(/\D/g, "");
+      if (value.length > 11) value = value.slice(0, 11);
+
+      // Aplicar máscara
+      if (value.length > 10) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+      } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+      } else {
+        value = value.replace(/^(\d*)/, "($1");
+      }
+
+      input.value = value;
+
+      // Validação do número
+      if (telefoneEhValido(value)) {
+        input.style.border = "1px solid green";
+      } else {
+        input.style.border = "1px solid red";
+      }
+    });
+  });
+});
+
+function telefoneEhValido(numeroFormatado) {
+  const apenasNumeros = numeroFormatado.replace(/\D/g, "");
+  return /^\d{11}$/.test(apenasNumeros) && apenasNumeros[2] === "9";
+}
 
 
-// Authentication Functions
+// =========================================================
+// 🔑 Authentication Functions
+// =========================================================
 async function login(telefone, senha) {
   try {
     const response = await apiRequest("/auth/login", {
       method: "POST",
       body: JSON.stringify({ telefone, senha }),
     });
-
     currentUser = response.usuario;
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
     showDashboard();
     showToast("Login realizado com sucesso!", "success");
   } catch (error) {
@@ -125,33 +167,13 @@ async function login(telefone, senha) {
   }
 }
 
-// testes
-registerForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-
-  // Pega o telefone e remove tudo que não é número
-  let telefone = formData.get("telefone").replace(/\D/g, "");
-
-  register(
-    formData.get("nome"),
-    telefone, // envia apenas números
-    formData.get("senha"),
-    formData.get("cargo")
-  );
-});
-
 async function register(nome, telefone, senha, cargo) {
   try {
     await apiRequest("/auth/register", {
       method: "POST",
       body: JSON.stringify({ nome, telefone, senha, cargo }),
     });
-
-    showToast(
-      "Cadastro realizado com sucesso! Faça login para continuar.",
-      "success"
-    );
+    showToast("Cadastro realizado com sucesso! Faça login para continuar.", "success");
     showScreen("login");
   } catch (error) {
     console.error("Erro no cadastro:", error);
@@ -165,7 +187,9 @@ function logout() {
   showToast("Logout realizado com sucesso!", "success");
 }
 
-// Ticket Functions
+// =========================================================
+// 🎫 Ticket Functions
+// =========================================================
 async function loadTickets() {
   try {
     const tickets = await apiRequest("/tickets");
@@ -177,40 +201,31 @@ async function loadTickets() {
 
 function displayTickets(tickets) {
   ticketsList.innerHTML = "";
-
   if (tickets.length === 0) {
-    ticketsList.innerHTML =
-      '<div class="no-tickets">Nenhum chamado encontrado</div>';
+    ticketsList.innerHTML = '<div class="no-tickets">Nenhum chamado encontrado</div>';
     return;
   }
-
   tickets.forEach((ticket) => {
     const ticketElement = document.createElement("div");
     ticketElement.className = "ticket-item";
     ticketElement.onclick = () => openTicketModal(ticket.id);
-
     ticketElement.innerHTML = `
-            <div class="ticket-header">
-                <div>
-                    <div class="ticket-title">${ticket.titulo}</div>
-                    <div class="ticket-meta">
-                        <span>ID: #${ticket.id}</span>
-                        <span>Solicitante: ${ticket.solicitante}</span>
-                        <span>Departamento: ${ticket.departamento}</span>
-                        <span>Criado: ${formatDate(ticket.dataAbertura)}</span>
-                    </div>
-                </div>
-                <div>
-                    <span class="ticket-status ${getStatusClass(
-                      ticket.status
-                    )}">${ticket.status}</span>
-                    <span class="priority-badge ${getPriorityClass(
-                      ticket.prioridade
-                    )}">${ticket.prioridade}</span>
-                </div>
-            </div>
-        `;
-
+      <div class="ticket-header">
+        <div>
+          <div class="ticket-title">${ticket.titulo}</div>
+          <div class="ticket-meta">
+            <span>ID: #${ticket.id}</span>
+            <span>Solicitante: ${ticket.solicitante}</span>
+            <span>Departamento: ${ticket.departamento}</span>
+            <span>Criado: ${formatDate(ticket.dataAbertura)}</span>
+          </div>
+        </div>
+        <div>
+          <span class="ticket-status ${getStatusClass(ticket.status)}">${ticket.status}</span>
+          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${ticket.prioridade}</span>
+        </div>
+      </div>
+    `;
     ticketsList.appendChild(ticketElement);
   });
 }
@@ -221,19 +236,8 @@ async function createTicket(ticketData) {
       method: "POST",
       body: JSON.stringify(ticketData),
     });
-
-    // 🔥 Pegar o protocolo retornado pela API
     const protocolo = response?.ticket?.protocolo;
-
-    if (protocolo) {
-      showToast(
-        `Chamado criado com sucesso! Protocolo: ${protocolo}`,
-        "success"
-      );
-    } else {
-      showToast("Chamado criado com sucesso!", "success");
-    }
-
+    showToast(protocolo ? `Chamado criado com sucesso! Protocolo: ${protocolo}` : "Chamado criado com sucesso!", "success");
     newTicketForm.reset();
     loadTickets();
     showSection("tickets");
@@ -249,17 +253,18 @@ async function updateTicketStatus(ticketId, status, tecnicoResponsavel) {
       method: "PATCH",
       body: JSON.stringify({ status, tecnicoResponsavel }),
     });
-
     showToast("Status atualizado com sucesso!", "success");
     loadTickets();
-    openTicketModal(ticketId); // Refresh modal
+    openTicketModal(ticketId);
   } catch (error) {
     console.error("Erro ao atualizar status:", error);
   }
 }
 
-// Modal Functions
-async function openTicketModal(ticketId) {
+// =========================================================
+// 🪟 Modal Functions
+// =========================================================
+async function openTicketModal(ticketId) { 
   currentTicketId = ticketId;
 
   try {
@@ -364,13 +369,12 @@ async function openTicketModal(ticketId) {
   }
 }
 
-function closeTicketModal() {
-  ticketModal.classList.remove("active");
-  currentTicketId = null;
-}
+function closeTicketModal() { ticketModal.classList.remove("active"); currentTicketId = null; }
 
-// Comments Functions
-async function loadComments(ticketId) {
+// =========================================================
+// 💬 Comments Functions
+// =========================================================
+async function loadComments(ticketId) { 
   try {
     const comments = await apiRequest(`/tickets/${ticketId}/comentarios`);
     displayComments(comments);
@@ -419,8 +423,11 @@ async function addComment(ticketId, autor, texto) {
   }
 }
 
-// Navigation Functions
-function showSection(sectionName) {
+
+// =========================================================
+// 🧭 Navigation Functions
+// =========================================================
+function showSection(sectionName) { 
   // Update navigation
   navItems.forEach((item) => {
     item.classList.remove("active");
@@ -437,7 +444,9 @@ function showSection(sectionName) {
   document.getElementById(sectionName + "Section").classList.add("active");
 }
 
-// Event Listeners
+// =========================================================
+// 📋 Event Listeners
+// =========================================================
 document.addEventListener("DOMContentLoaded", () => {
   // Check for saved user
   const savedUser = localStorage.getItem("currentUser");
@@ -554,16 +563,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Keyboard shortcuts
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && ticketModal.classList.contains("active")) {
-    closeTicketModal();
-  }
-});
 
-const setorSelect = document.getElementById("setor");
-const detalheContainer = document.getElementById("setorDetalheContainer");
-
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && ticketModal.classList.contains("active")) closeTicketModal(); });
 setorSelect.addEventListener("change", () => {
   detalheContainer.innerHTML = ""; // limpa campos antigos
   const setor = setorSelect.value;
@@ -583,16 +584,11 @@ setorSelect.addEventListener("change", () => {
         <option value="outra">Outra</option>
       </select>
     `;
-  }
-  // admin e outros não precisam de campo extra
-});
-// Elementos do DOM
-const tecnicosList = document.getElementById("tecnicosList");
-const setorTecnicoForm = document.getElementById("setorTecnicoForm");
-const setorSelectfor = document.getElementById("setorSelectfor");
-const tecnicoInput = document.getElementById("tecnicoInput");
+  } });
 
-// Função para carregar técnicos
+// =========================================================
+// 👨‍🔧 Técnicos Functions
+// =========================================================
 async function loadTecnicos() {
   if (!tecnicosList) return; // evita erro se elemento não existir
 
@@ -615,9 +611,7 @@ async function loadTecnicos() {
   }
 }
 
-// Salvar técnico (apenas se o formulário existir)
-if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
-  setorTecnicoForm.addEventListener("submit", async (e) => {
+if (setorTecnicoForm && setorSelectfor && tecnicoInput) { setorTecnicoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const setor = setorSelectfor.value;
@@ -643,11 +637,9 @@ if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
       showToast("Erro ao salvar técnico", "error");
       console.error(err);
     }
-  });
-}
+}); }
 
-// Carrega ao abrir a seção (apenas se admin)
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => { 
   const savedUser = localStorage.getItem("currentUser");
   if (savedUser) {
     currentUser = JSON.parse(savedUser); // usa a variável global
@@ -658,7 +650,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-function showDashboard() {
+// =========================================================
+// 📊 Dashboard
+// =========================================================
+function showDashboard() { 
   showScreen("dashboard");
   userInfo.textContent = `${currentUser.nome} (${currentUser.cargo})`;
 
@@ -699,44 +694,6 @@ function showDashboard() {
   }
 }
 
-// async function loadTecnicos() {
-//   if (!tecnicosList || !tecnicoInput) return; // evita erro se elementos não existirem
-
-//   try {
-//     // Pega técnicos já atribuídos a setores
-//     const response = await fetch(`${API_BASE_URL}/auth/setores-tecnicos`);
-//     const data = await response.json();
-
-//     // Lista na seção de técnicos por setor
-//     tecnicosList.innerHTML = data
-//       .map(
-//         (item) => `
-//         <div class="p-2 border rounded mb-2 flex justify-between items-center">
-//             <span><strong>${item.setor}:</strong> ${item.tecnico}</span>
-//         </div>
-//     `
-//       )
-//       .join("");
-
-//     // Carrega todos os usuários com cargo técnico no select
-//     const usersResponse = await fetch(
-//       `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
-//     );
-//     const usersData = await usersResponse.json();
-
-//     tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>'; // limpa
-//     usersData.forEach((user) => {
-//       const option = document.createElement("option");
-//       option.value = user.nome;
-//       option.textContent = user.nome;
-//       tecnicoInput.appendChild(option);
-//     });
-//   } catch (err) {
-//     tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
-//     console.error(err);
-//   }
-// }
-
 async function loadTicketsByTecnico(tecnicoNome) {
   try {
     const tickets = await apiRequest(
@@ -748,7 +705,11 @@ async function loadTicketsByTecnico(tecnicoNome) {
   }
 }
 
-// Toggle menu no mobile
+// =========================================================
+// 📱 Mobile Menu
+// =========================================================
 document.getElementById("menuToggle")?.addEventListener("click", () => {
   document.querySelector(".sidebar")?.classList.toggle("active");
 });
+
+
