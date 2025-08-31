@@ -682,7 +682,7 @@ if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
       const response = await fetch(`${API_BASE_URL}/auth/setor-tecnico`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ setor, tecnico }),
+        body: JSON.stringify({ setor, tecnico, telefone }),
       });
 
       const result = await response.json();
