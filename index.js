@@ -58,6 +58,10 @@ const tecnicosList = document.getElementById("tecnicosList");
 const setorSelectfor = document.getElementById("setorSelectfor");
 const tecnicoInput = document.getElementById("tecnicoInput");
 
+const telefoneInput = document.getElementById("telefone"); // input do telefone
+
+
+
 // =========================================================
 // 🛠️ Utility Functions
 // =========================================================
