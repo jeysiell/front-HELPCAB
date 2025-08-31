@@ -616,39 +616,51 @@ setorSelect.addEventListener("change", () => {
 // 👨‍🔧 Técnicos Functions
 // =========================================================
 async function loadTecnicos() {
-  if (!tecnicosList) return; // evita erro se elemento não existir
+  if (!tecnicosList || !tecnicoInput || !telefoneInput) return; // evita erro se elementos não existirem
 
   try {
+    // Busca setores com técnicos
     const response = await fetch(`${API_BASE_URL}/auth/setores-tecnicos`);
     const data = await response.json();
 
     tecnicosList.innerHTML = data
       .map(
         (item) => `
-      <div class="p-2 border rounded mb-2 flex justify-between items-center">
-        <span><strong>${item.setor}:</strong> ${item.tecnico}</span>
-      </div>
-    `
+        <div class="p-2 border rounded mb-2 flex justify-between items-center">
+          <span><strong>${item.setor}:</strong> ${item.tecnico} - ${item.telefone || "Sem telefone"}</span>
+        </div>
+      `
       )
       .join("");
-     // Carrega todos os usuários com cargo técnico no select
-    const usersResponse = await fetch(
-      `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
-    );
+
+    // Busca todos os usuários com cargo técnico
+    const usersResponse = await fetch(`${API_BASE_URL}/auth/usuarios?cargo=tecnico`);
     const usersData = await usersResponse.json();
 
-    tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>'; // limpa
+    // Limpa o select e adiciona a opção padrão
+    tecnicoInput.innerHTML = '<option value="">Selecione o técnico</option>';
+
     usersData.forEach((user) => {
       const option = document.createElement("option");
       option.value = user.nome;
-      option.textContent = user.nome;
+      option.textContent = `${user.nome} (${user.telefone || "Sem telefone"})`;
+      // Armazena o telefone no atributo data-telefone
+      option.dataset.telefone = user.telefone || "";
       tecnicoInput.appendChild(option);
     });
+
+    // Atualiza o campo de telefone automaticamente ao selecionar um técnico
+    tecnicoInput.addEventListener("change", () => {
+      const selectedOption = tecnicoInput.selectedOptions[0];
+      telefoneInput.value = selectedOption ? selectedOption.dataset.telefone : "";
+    });
+
   } catch (err) {
     tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
     console.error(err);
   }
 }
+
 
 if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
   setorTecnicoForm.addEventListener("submit", async (e) => {
