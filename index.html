@@ -272,6 +272,7 @@
           </section>
 
           <!-- Admin Setores Section -->
+          <!-- Admin Setores Section -->
           <section
             id="adminSetoresSection"
             class="adminsection content-section"
@@ -280,14 +281,14 @@
               <i class="fas fa-cogs icon"></i>
               <h2 class="title">Configuração de Técnicos por Setor</h2>
             </div>
-
+          
             <div class="row-list">
               <!-- Form -->
               <form id="setorTecnicoForm" class="tecnico-form">
                 <h3 class="form-title">
                   <i class="fas fa-user-plus icon"></i> Adicionar Técnico
                 </h3>
-
+              
                 <div class="form-group">
                   <label for="setorSelectfor" class="label">Setor</label>
                   <select id="setorSelectfor" class="select">
@@ -298,21 +299,32 @@
                     <option value="outros">Outros</option>
                   </select>
                 </div>
-
+              
                 <div class="form-group">
-                  <label for="tecnicoInput" class="label"
-                    >Técnico responsável</label
-                  >
+                  <label for="tecnicoInput" class="label">Técnico responsável</label>
                   <select id="tecnicoInput" class="select">
                     <option value="">Selecione o técnico</option>
                   </select>
                 </div>
-
+              
+                <!-- 👇 Campo telefone extra -->
+                <div class="form-group">
+                  <label for="telefoneInput" class="label">Telefone</label>
+                  <input
+                    type="text"
+                    id="telefoneInput"
+                    class="input"
+                    placeholder="Telefone do técnico"
+                    readonly
+                  />
+                </div>
+                
+              
                 <button type="submit" class="submit-button">
                   <i class="fas icon"></i> Salvar
                 </button>
               </form>
-
+            
               <!-- Lista -->
               <div class="row-tec">
                 <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
@@ -320,6 +332,7 @@
               </div>
             </div>
           </section>
+
         </main>
       </div>
     </div>

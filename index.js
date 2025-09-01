@@ -1,7 +1,7 @@
 // =========================================================
 // 🌐 API Configuration
 // =========================================================
-const API_BASE_URL = "https://helpcab.onrender.com/api";
+const API_BASE_URL = "https://helpcab-1.onrender.com/api";
 
 // =========================================================
 // 🌍 Global State
@@ -57,8 +57,7 @@ const detalheContainer = document.getElementById("setorDetalheContainer");
 const tecnicosList = document.getElementById("tecnicosList");
 const setorSelectfor = document.getElementById("setorSelectfor");
 const tecnicoInput = document.getElementById("tecnicoInput");
-
-const telefoneInput = document.getElementById("telefone"); // input do telefone
+const telefoneInput = document.getElementById("telefoneInput");
 
 
 
@@ -631,14 +630,18 @@ async function loadTecnicos() {
       .map(
         (item) => `
         <div class="p-2 border rounded mb-2 flex justify-between items-center">
-          <span><strong>${item.setor}:</strong> ${item.tecnico} - ${item.telefone || "Sem telefone"}</span>
+          <span><strong>${item.setor}:</strong> ${item.tecnico} - ${
+          item.telefone || "Sem telefone"
+        }</span>
         </div>
       `
       )
       .join("");
 
     // Busca todos os usuários com cargo técnico
-    const usersResponse = await fetch(`${API_BASE_URL}/auth/usuarios?cargo=tecnico`);
+    const usersResponse = await fetch(
+      `${API_BASE_URL}/auth/usuarios?cargo=tecnico`
+    );
     const usersData = await usersResponse.json();
 
     // Limpa o select e adiciona a opção padrão
@@ -656,22 +659,23 @@ async function loadTecnicos() {
     // Atualiza o campo de telefone automaticamente ao selecionar um técnico
     tecnicoInput.addEventListener("change", () => {
       const selectedOption = tecnicoInput.selectedOptions[0];
-      telefoneInput.value = selectedOption ? selectedOption.dataset.telefone : "";
+      telefoneInput.value = selectedOption
+        ? selectedOption.dataset.telefone
+        : "";
     });
-
   } catch (err) {
     tecnicosList.innerHTML = "<div>Erro ao carregar técnicos</div>";
     console.error(err);
   }
 }
 
-
-if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
+if (setorTecnicoForm && setorSelectfor && tecnicoInput && telefoneInput) {
   setorTecnicoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const setor = setorSelectfor.value;
     const tecnico = tecnicoInput.value;
+    const telefone = telefoneInput.value; // 👈 pega do input
 
     if (!setor || !tecnico) {
       showToast("Preencha todos os campos", "error");
@@ -682,7 +686,7 @@ if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
       const response = await fetch(`${API_BASE_URL}/auth/setor-tecnico`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ setor, tecnico, telefone }),
+        body: JSON.stringify({ setor, tecnico, telefone }), // 👈 telefone certo
       });
 
       const result = await response.json();
@@ -695,6 +699,7 @@ if (setorTecnicoForm && setorSelectfor && tecnicoInput) {
     }
   });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const savedUser = localStorage.getItem("currentUser");
@@ -777,7 +782,7 @@ document
   .addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
 
-    if (value.length > 11) value = value.slice(0, 11); 
+    if (value.length > 11) value = value.slice(0, 11);
 
     if (value.length > 6) {
       e.target.value = `(${value.slice(0, 2)}) ${value.slice(
@@ -789,4 +794,4 @@ document
     } else if (value.length > 0) {
       e.target.value = `(${value}`;
     }
-});
+  });
