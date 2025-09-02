@@ -1,479 +1,427 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HelpCAB</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="screen active">
-      <div class="login-container">
-        <div class="login-card">
-          <div class="login-header">
-            <i class="fas fa-ticket-alt"></i>
-            <h1>HelpCAB</h1>
-            <p>Faça login para continuar</p>
-          </div>
 
-          <form id="loginForm" class="login-form">
-            <div class="form-group">
-              <label for="telefone">telefone</label>
-              <input
-                type="text"
-                id="telefone"
-                class="checkout-telefone"
-                name="telefone"
-                placeholder="(99) 99999-9999"
-                maxlength="15"
-                required
-              />
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpCAB</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+</head>
 
-            <div class="form-group">
-              <label for="senha">Senha</label>
-              <input type="password" id="senha" name="senha" required />
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-sign-in-alt"></i>
-              Entrar
-            </button>
-          </form>
-
-          <div class="login-footer">
-            <p>Não tem conta? <a href="#" id="showRegister">Cadastre-se</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Register Screen -->
-    <div id="registerScreen" class="screen">
-      <div class="login-container">
-        <div class="login-card">
-          <div class="login-header">
-            <i class="fas fa-user-plus"></i>
-            <h1>Cadastro</h1>
-            <p>Crie sua conta</p>
-          </div>
-
-          <form id="registerForm" class="login-form">
-            <div class="form-group">
-              <label for="regNome">Nome</label>
-              <input type="text" id="regNome" name="nome" required />
-            </div>
-
-            <div class="form-group">
-              <label for="regtelefone">telefone</label>
-              <input
-                type="text"
-                id="regtelefone"
-                class="checkout-telefone"
-                name="telefone"
-                placeholder="(99) 99999-9999"
-                maxlength="15"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="regSenha">Senha</label>
-              <input type="password" id="regSenha" name="senha" required />
-            </div>
-
-            <div class="form-group">
-              <label for="regCargo">Cargo</label>
-              <select id="regCargo" name="cargo">
-                <option value="tecnico">Técnico</option>
-                <option value="admin">Administrador</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-user-plus"></i>
-              Cadastrar
-            </button>
-          </form>
-
-          <div class="login-footer">
-            <p>Já tem conta? <a href="#" id="showLogin">Faça login</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dashboard Screen -->
-    <div id="dashboardScreen" class="screen">
-      <!-- Header -->
-      <header class="dashboard-header">
-        <div class="header-left">
-          <button id="menuToggle" class="hamburger">
-            <i class="fas fa-bars"></i>
-          </button>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen active">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
           <i class="fas fa-ticket-alt"></i>
           <h1>HelpCAB</h1>
+          <p>Faça login para continuar</p>
         </div>
-        <div class="header-right">
-          <span id="userInfo" class="user-info"></span>
-          <button id="logoutBtn" class="btn btn-secondary">
-            <i class="fas fa-sign-out-alt"></i>
-            Sair
+
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="telefone">telefone</label>
+            <input type="text" id="telefone" class="checkout-telefone" name="telefone" placeholder="(99) 99999-9999"
+              maxlength="15" required />
+          </div>
+
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
           </button>
-        </div>
-      </header>
+        </form>
 
-      <!-- Main Content -->
-      <div class="dashboard-content">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-          <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" data-section="tickets">
-              <i class="fas fa-list"></i>
-              Chamados
-            </a>
-            <a href="#" class="nav-item" data-section="newTicket">
+        <div class="login-footer">
+          <p>Não tem conta? <a href="#" id="showRegister">Cadastre-se</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Screen -->
+  <div id="registerScreen" class="screen">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <i class="fas fa-user-plus"></i>
+          <h1>Cadastro</h1>
+          <p>Crie sua conta</p>
+        </div>
+
+        <form id="registerForm" class="login-form">
+          <div class="form-group">
+            <label for="regNome">Nome</label>
+            <input type="text" id="regNome" name="nome" required />
+          </div>
+
+          <div class="form-group">
+            <label for="regtelefone">telefone</label>
+            <input type="text" id="regtelefone" class="checkout-telefone" name="telefone" placeholder="(99) 99999-9999"
+              maxlength="15" required />
+          </div>
+
+          <div class="form-group">
+            <label for="regSenha">Senha</label>
+            <input type="password" id="regSenha" name="senha" required />
+          </div>
+
+          <div class="form-group">
+            <label for="regCargo">Cargo</label>
+            <select id="regCargo" name="cargo">
+              <option value="tecnico">Técnico</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i>
+            Cadastrar
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <p>Já tem conta? <a href="#" id="showLogin">Faça login</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Screen -->
+  <div id="dashboardScreen" class="screen">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <button id="menuToggle" class="hamburger">
+          <i class="fas fa-bars"></i>
+        </button>
+        <i class="fas fa-ticket-alt"></i>
+        <h1>HelpCAB</h1>
+      </div>
+      <div class="header-right">
+        <span id="userInfo" class="user-info"></span>
+        <button id="logoutBtn" class="btn btn-secondary">
+          <i class="fas fa-sign-out-alt"></i>
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-section="tickets">
+            <i class="fas fa-list"></i>
+            Chamados
+          </a>
+          <a href="#" class="nav-item" data-section="newTicket">
+            <i class="fas fa-plus"></i>
+            Novo Chamado
+          </a>
+          <a href="#" class="nav-item" data-section="relatorios">
+            <i class="fas fa-chart-line"></i>
+            Relatórios
+          </a>
+          <div id="adminNavContainer"></div>
+        </nav>
+      </aside>
+
+      <!-- Content Area -->
+      <main class="main-content">
+
+        <section id="ticketsSection" class="content-section active">
+          <div class="section-header">
+            <h2>Lista de Chamados</h2>
+
+            <button id="refreshTickets" class="btn btn-secondary">
+              <i class="fas fa-sync-alt"></i>
+              Atualizar
+            </button>
+          </div>
+
+          <div class="tickets-container">
+            <div id="ticketsList" class="tickets-list">
+
+            </div>
+          </div>
+        </section>
+
+        <!-- New Ticket Section -->
+        <section id="newTicketSection" class="content-section">
+          <div class="section-header">
+            <h2>Novo Chamado</h2>
+          </div>
+
+          <form id="newTicketForm" class="ticket-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" name="titulo" required />
+              </div>
+
+              <div class="form-group">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
+                  <option value="">Selecione...</option>
+                  <option value="hardware">Hardware</option>
+                  <option value="software">Software</option>
+                  <option value="rede">Rede</option>
+                  <option value="impressora">Impressora</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="setor">Setor</label>
+                <select id="setor" name="setor" required>
+                  <option value="">Selecione o setor</option>
+                  <option value="salas">Salas de Aula</option>
+                  <option value="coordenacao">Coordenação</option>
+                  <option value="administracao">Administração</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <!-- Container para campos específicos -->
+              <div id="setorDetalheContainer"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="prioridade">Prioridade</label>
+                <select id="prioridade" name="prioridade" required>
+                  <option value="">Selecione...</option>
+                  <option value="baixa">Baixa</option>
+                  <option value="media">Média</option>
+                  <option value="alta">Alta</option>
+                  <option value="critica">Crítica</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="departamento">Departamento</label>
+                <input type="hidden" name="departamento" value="TI" />
+                <input type="text" value="TI" disabled class="w-full p-2 border rounded bg-gray-100" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="solicitante">Solicitante</label>
+              <input type="text" id="solicitante" name="solicitante" required />
+            </div>
+
+            <div class="form-group">
+              <label for="telefoneSolicitante">Telefone</label>
+              <input type="text" id="telefoneSolicitante" name="telefone" maxlength="15" placeholder="(99) 99999-9999"
+                required />
+            </div>
+
+            <div class="form-group">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" name="descricao" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
               <i class="fas fa-plus"></i>
-              Novo Chamado
-            </a>
-            <a href="#" class="nav-item" data-section="relatorios">
-              <i class="fas fa-chart-line"></i>
-              Relatórios
-            </a>
-            <div id="adminNavContainer"></div>
-          </nav>
-        </aside>
+              Criar Chamado
+            </button>
+          </form>
+        </section>
 
-        <!-- Content Area -->
-        <main class="main-content">
+        <!-- Admin Setores Section -->
+        <section id="adminSetoresSection" class="adminsection content-section">
+          <div class="header">
+            <i class="fas fa-cogs icon"></i>
+            <h2 class="title">Configuração de Técnicos por Setor</h2>
+          </div>
 
-          <section id="ticketsSection" class="content-section active">
-            <div class="section-header">
-              <h2>Lista de Chamados</h2>
-              <button id="refreshTickets" class="btn btn-secondary">
-                <i class="fas fa-sync-alt"></i>
-                Atualizar
-              </button>
-            </div>
+          <div class="row-list">
+            <!-- Form -->
+            <form id="setorTecnicoForm" class="tecnico-form">
+              <h3 class="form-title">
+                <i class="fas fa-user-plus icon"></i> Adicionar Técnico
+              </h3>
 
-            <div class="tickets-container">
-              <div id="ticketsList" class="tickets-list">
-
-              </div>
-            </div>
-          </section>
-
-          <!-- New Ticket Section -->
-          <section id="newTicketSection" class="content-section">
-            <div class="section-header">
-              <h2>Novo Chamado</h2>
-            </div>
-
-            <form id="newTicketForm" class="ticket-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="titulo">Título</label>
-                  <input type="text" id="titulo" name="titulo" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="categoria">Categoria</label>
-                  <select id="categoria" name="categoria" required>
-                    <option value="">Selecione...</option>
-                    <option value="hardware">Hardware</option>
-                    <option value="software">Software</option>
-                    <option value="rede">Rede</option>
-                    <option value="impressora">Impressora</option>
-                    <option value="outros">Outros</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="setor">Setor</label>
-                  <select id="setor" name="setor" required>
-                    <option value="">Selecione o setor</option>
-                    <option value="salas">Salas de Aula</option>
-                    <option value="coordenacao">Coordenação</option>
-                    <option value="administracao">Administração</option>
-                    <option value="outros">Outros</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="setorSelectfor" class="label">Setor</label>
+                <select id="setorSelectfor" class="select">
+                  <option value="">Selecione o setor</option>
+                  <option value="salas">Salas de Aula</option>
+                  <option value="coordenacao">Coordenação</option>
+                  <option value="administracao">Administração</option>
+                  <option value="outros">Outros</option>
+                </select>
               </div>
 
               <div class="form-group">
-                <!-- Container para campos específicos -->
-                <div id="setorDetalheContainer"></div>
+                <label for="tecnicoInput" class="label">Técnico responsável</label>
+                <select id="tecnicoInput" class="select">
+                  <option value="">Selecione o técnico</option>
+                </select>
               </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="prioridade">Prioridade</label>
-                  <select id="prioridade" name="prioridade" required>
-                    <option value="">Selecione...</option>
-                    <option value="baixa">Baixa</option>
-                    <option value="media">Média</option>
-                    <option value="alta">Alta</option>
-                    <option value="critica">Crítica</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="departamento">Departamento</label>
-                  <input type="hidden" name="departamento" value="TI" />
-                  <input
-                    type="text"
-                    value="TI"
-                    disabled
-                    class="w-full p-2 border rounded bg-gray-100"
-                  />
-                </div>
-              </div>
-
+              <!-- Campo telefone extra -->
               <div class="form-group">
-                <label for="solicitante">Solicitante</label>
-                <input
-                  type="text"
-                  id="solicitante"
-                  name="solicitante"
-                  required
-                />
+                <label for="telefoneInput" class="label">Telefone</label>
+                <input type="text" id="telefoneInput" class="input" placeholder="Telefone do técnico" readonly />
               </div>
 
-              <div class="form-group">
-                <label for="telefoneSolicitante">Telefone</label>
-                <input
-                  type="text"
-                  id="telefoneSolicitante"
-                  name="telefone"
-                  maxlength="15"
-                  placeholder="(99) 99999-9999"
-                  required
-                />
-              </div>
 
-              <div class="form-group">
-                <label for="descricao">Descrição</label>
-                <textarea
-                  id="descricao"
-                  name="descricao"
-                  rows="4"
-                  required
-                ></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                Criar Chamado
+              <button type="submit" class="submit-button">
+                <i class="fas icon"></i> Salvar
               </button>
             </form>
-          </section>
 
-          <!-- Admin Setores Section -->
-          <section
-            id="adminSetoresSection"
-            class="adminsection content-section"
-          >
-            <div class="header">
-              <i class="fas fa-cogs icon"></i>
-              <h2 class="title">Configuração de Técnicos por Setor</h2>
+            <!-- Lista -->
+            <div class="row-tec">
+              <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
+              <div id="tecnicosList" class="tecnicos-list"></div>
             </div>
-          
-            <div class="row-list">
-              <!-- Form -->
-              <form id="setorTecnicoForm" class="tecnico-form">
-                <h3 class="form-title">
-                  <i class="fas fa-user-plus icon"></i> Adicionar Técnico
-                </h3>
-              
-                <div class="form-group">
-                  <label for="setorSelectfor" class="label">Setor</label>
-                  <select id="setorSelectfor" class="select">
-                    <option value="">Selecione o setor</option>
-                    <option value="salas">Salas de Aula</option>
-                    <option value="coordenacao">Coordenação</option>
-                    <option value="administracao">Administração</option>
-                    <option value="outros">Outros</option>
-                  </select>
-                </div>
-              
-                <div class="form-group">
-                  <label for="tecnicoInput" class="label">Técnico responsável</label>
-                  <select id="tecnicoInput" class="select">
-                    <option value="">Selecione o técnico</option>
-                  </select>
-                </div>
-              
-                <!-- Campo telefone extra -->
-                <div class="form-group">
-                  <label for="telefoneInput" class="label">Telefone</label>
-                  <input
-                    type="text"
-                    id="telefoneInput"
-                    class="input"
-                    placeholder="Telefone do técnico"
-                    readonly
-                  />
-                </div>
-                
-              
-                <button type="submit" class="submit-button">
-                  <i class="fas icon"></i> Salvar
-                </button>
-              </form>
-            
-              <!-- Lista -->
-              <div class="row-tec">
-                <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
-                <div id="tecnicosList" class="tecnicos-list"></div>
-              </div>
-            </div>
-          </section>
+          </div>
+        </section>
 
 
-          
-          <!-- Relatórios Section -->
-          <section id="relatoriosSection" class="content-section">
-            <div class="section-header">
-              <h2>Relatórios</h2>
-            </div>
-          
-            <div class="report-filters">
-              <label for="tipoRelatorio">Período:</label>
-              <select id="tipoRelatorio" class="select">
-                <option value="diario">Diário</option>
-                <option value="semanal">Semanal</option>
-                <option value="mensal">Mensal</option>
-              </select>
-            
-              <button id="gerarRelatorio" class="btn btn-primary">
-                <i class="fas fa-sync-alt"></i> Gerar
-              </button>
-            
-              <button id="downloadPDF" class="btn btn-secondary">
-                <i class="fas fa-file-pdf"></i> PDF
-              </button>
-            
-              <button id="downloadExcel" class="btn btn-secondary">
-                <i class="fas fa-file-excel"></i> Excel
-              </button>
-            </div>
-          
-            <div class="report-summary">
-              <h3>Resumo</h3>
-              <ul>
-                <li>Total de chamados: <span id="totalChamados">0</span></li>
-                <li>Atendidos: <span id="atendidos">0</span></li>
-                <li>Não atendidos: <span id="naoAtendidos">0</span></li>
-                <li>Tempo médio de atendimento: <span id="tempoMedio">0</span> min</li>
-              </ul>
-            </div>
-          
-            <div class="report-details">
-              <h3>Detalhes</h3>
-              <table class="report-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Solicitante</th>
-                    <th>Status</th>
-                    <th>Abertura</th>
-                    <th>Conclusão</th>
-                    <th>Tempo (min)</th>
-                  </tr>
-                </thead>
-                <tbody id="reportTableBody">
-                  <!-- Linhas dos relatórios serão carregadas aqui -->
-                </tbody>
-              </table>
-            </div>
-          </section>
 
-        </main>
-      </div>
+        <!-- Relatórios Section -->
+        <section id="relatoriosSection" class="content-section">
+          <div class="section-header">
+            <h2>Relatórios</h2>
+          </div>
+
+          <div class="report-filters">
+            <label for="tipoRelatorio">Período:</label>
+            <select id="tipoRelatorio" class="select">
+              <option value="diario">Diário</option>
+              <option value="semanal">Semanal</option>
+              <option value="mensal">Mensal</option>
+            </select>
+
+            <button id="gerarRelatorio" class="btn btn-primary">
+              <i class="fas fa-sync-alt"></i> Gerar
+            </button>
+
+            <button id="downloadPDF" class="btn btn-secondary">
+              <i class="fas fa-file-pdf"></i> PDF
+            </button>
+
+            <button id="downloadExcel" class="btn btn-secondary">
+              <i class="fas fa-file-excel"></i> Excel
+            </button>
+          </div>
+
+          <div class="report-summary">
+            <h3>Resumo</h3>
+            <ul>
+              <li>Total de chamados: <span id="totalChamados">0</span></li>
+              <li>Atendidos: <span id="atendidos">0</span></li>
+              <li>Não atendidos: <span id="naoAtendidos">0</span></li>
+              <li>Tempo médio de atendimento: <span id="tempoMedio">0</span> min</li>
+            </ul>
+          </div>
+
+          <div class="report-details">
+            <h3>Detalhes</h3>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Título</th>
+                  <th>Solicitante</th>
+                  <th>Status</th>
+                  <th>Abertura</th>
+                  <th>Conclusão</th>
+                  <th>Tempo (min)</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody">
+                <!-- Linhas dos relatórios serão carregadas aqui -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
     </div>
+  </div>
 
-    <!-- Ticket Modal -->
-    <div id="ticketModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 id="modalTitle">Detalhes do Chamado</h3>
-          <button class="modal-close">&times;</button>
+  <!-- Ticket Modal -->
+  <div id="ticketModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Detalhes do Chamado</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="ticketDetails" class="ticket-details">
+
         </div>
 
-        <div class="modal-body">
-          <div id="ticketDetails" class="ticket-details">
-        
+        <div class="ticket-actions">
+          <div class="status-update" id="statusUpdate">
+            <label for="newStatus">Status:</label>
+            <select id="newStatus">
+              <option value="aberto">Aberto</option>
+              <option value="Em_andamento">Em Andamento</option>
+              <option value="resolvido">Resolvido</option>
+              <option value="fechado">Fechado</option>
+            </select>
+
+            <label for="tecnicoResponsavel">Técnico:</label>
+            <input type="text" id="tecnicoResponsavel" placeholder="Nome do técnico" />
+
+            <button id="updateStatus" class="btn btn-primary">
+              Atualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="comments-section">
+          <h4>Comentários</h4>
+          <div id="commentsList" class="comments-list">
+
           </div>
 
-          <div class="ticket-actions">
-            <div class="status-update" id="statusUpdate">
-              <label for="newStatus">Status:</label>
-              <select id="newStatus">
-                <option value="aberto">Aberto</option>
-                <option value="Em_andamento">Em Andamento</option>
-                <option value="resolvido">Resolvido</option>
-                <option value="fechado">Fechado</option>
-              </select>
-
-              <label for="tecnicoResponsavel">Técnico:</label>
-              <input
-                type="text"
-                id="tecnicoResponsavel"
-                placeholder="Nome do técnico"
-              />
-
-              <button id="updateStatus" class="btn btn-primary">
-                Atualizar
-              </button>
+          <form id="commentForm" class="comment-form">
+            <div class="form-group">
+              <label for="commentAutor">Autor</label>
+              <input type="text" id="commentAutor" name="autor" required />
             </div>
-          </div>
-
-          <div class="comments-section">
-            <h4>Comentários</h4>
-            <div id="commentsList" class="comments-list">
-             
+            <div class="form-group">
+              <label for="commentTexto">Comentário</label>
+              <textarea id="commentTexto" name="texto" rows="3" required></textarea>
             </div>
-
-            <form id="commentForm" class="comment-form">
-              <div class="form-group">
-                <label for="commentAutor">Autor</label>
-                <input type="text" id="commentAutor" name="autor" required />
-              </div>
-              <div class="form-group">
-                <label for="commentTexto">Comentário</label>
-                <textarea
-                  id="commentTexto"
-                  name="texto"
-                  rows="3"
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary btn-comment">
-                <i class="fas fa-comment"></i>
-                Adicionar Comentário
-              </button>
-            </form>
-          </div>
+            <button type="submit" class="btn btn-primary btn-comment">
+              <i class="fas fa-comment"></i>
+              Adicionar Comentário
+            </button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="loading-spinner">
-      <i class="fas fa-spinner fa-spin"></i>
-    </div>
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
 
-    <!-- Toast Notifications -->
-    <div id="toastContainer" class="toast-container"></div>
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
 
-    <script src="index.js"></script>
-  </body>
+  <script src="index.js"></script>
+</body>
+
 </html>
