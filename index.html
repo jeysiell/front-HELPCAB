@@ -141,6 +141,10 @@
               <i class="fas fa-plus"></i>
               Novo Chamado
             </a>
+            <a href="#" class="nav-item" data-section="relatorios">
+              <i class="fas fa-chart-line"></i>
+              Relatórios
+            </a>
             <div id="adminNavContainer"></div>
           </nav>
         </aside>
@@ -330,6 +334,66 @@
                 <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
                 <div id="tecnicosList" class="tecnicos-list"></div>
               </div>
+            </div>
+          </section>
+
+
+          
+          <!-- Relatórios Section -->
+          <section id="relatoriosSection" class="content-section">
+            <div class="section-header">
+              <h2>Relatórios</h2>
+            </div>
+          
+            <div class="report-filters">
+              <label for="tipoRelatorio">Período:</label>
+              <select id="tipoRelatorio" class="select">
+                <option value="diario">Diário</option>
+                <option value="semanal">Semanal</option>
+                <option value="mensal">Mensal</option>
+              </select>
+            
+              <button id="gerarRelatorio" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Gerar
+              </button>
+            
+              <button id="downloadPDF" class="btn btn-secondary">
+                <i class="fas fa-file-pdf"></i> PDF
+              </button>
+            
+              <button id="downloadExcel" class="btn btn-secondary">
+                <i class="fas fa-file-excel"></i> Excel
+              </button>
+            </div>
+          
+            <div class="report-summary">
+              <h3>Resumo</h3>
+              <ul>
+                <li>Total de chamados: <span id="totalChamados">0</span></li>
+                <li>Atendidos: <span id="atendidos">0</span></li>
+                <li>Não atendidos: <span id="naoAtendidos">0</span></li>
+                <li>Tempo médio de atendimento: <span id="tempoMedio">0</span> min</li>
+              </ul>
+            </div>
+          
+            <div class="report-details">
+              <h3>Detalhes</h3>
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Solicitante</th>
+                    <th>Status</th>
+                    <th>Abertura</th>
+                    <th>Conclusão</th>
+                    <th>Tempo (min)</th>
+                  </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                  <!-- Linhas dos relatórios serão carregadas aqui -->
+                </tbody>
+              </table>
             </div>
           </section>
 

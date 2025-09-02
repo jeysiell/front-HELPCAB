@@ -236,12 +236,10 @@ function displayTickets(tickets) {
           </div>
         </div>
         <div>
-          <span class="ticket-status ${getStatusClass(ticket.status)}">${
-      ticket.status
-    }</span>
-          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${
-      ticket.prioridade
-    }</span>
+          <span class="ticket-status ${getStatusClass(ticket.status)}">${ticket.status
+      }</span>
+          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${ticket.prioridade
+      }</span>
         </div>
       </div>
     `;
@@ -319,8 +317,8 @@ async function openTicketModal(ticketId) {
   <div class="detail-row">
       <span class="detail-label">Prioridade:</span>
       <span class="detail-value priority-badge ${getPriorityClass(
-        ticket.prioridade
-      )}">
+      ticket.prioridade
+    )}">
         ${ticket.prioridade}
       </span>
   </div>
@@ -338,16 +336,15 @@ async function openTicketModal(ticketId) {
       <span class="detail-label">Setor:</span>
       <span class="detail-value">${ticket.setor}</span>
   </div>
-  ${
-    ticket.detalheSetor
-      ? `
+  ${ticket.detalheSetor
+        ? `
       <div class="detail-row">
         <span class="detail-label">Detalhe do Setor:</span>
         <span class="detail-value">${ticket.detalheSetor}</span>
       </div>
       `
-      : ""
-  }
+        : ""
+      }
   <div class="detail-row">
       <span class="detail-label">Solicitante:</span>
       <span class="detail-value">${ticket.solicitante}</span>
@@ -358,8 +355,7 @@ async function openTicketModal(ticketId) {
   </div>
   <div class="detail-row">
       <span class="detail-label">Técnico:</span>
-      <span class="detail-value">${
-        ticket.tecnicoResponsavel || "Não atribuído"
+      <span class="detail-value">${ticket.tecnicoResponsavel || "Não atribuído"
       }</span>
   </div>
   <div class="detail-row">
@@ -368,8 +364,7 @@ async function openTicketModal(ticketId) {
   </div>
   <div class="detail-row">
       <span class="detail-label">Atualizado:</span>
-      <span class="detail-value">${
-        ticket.dataAtualizacao ? formatDate(ticket.dataAtualizacao) : "Nunca"
+      <span class="detail-value">${ticket.dataAtualizacao ? formatDate(ticket.dataAtualizacao) : "Nunca"
       }</span>
   </div>
   <div class="detail-row">
@@ -630,9 +625,8 @@ async function loadTecnicos() {
       .map(
         (item) => `
         <div class="p-2 border rounded mb-2 flex justify-between items-center">
-          <span><strong>${item.setor}:</strong> ${item.tecnico} - ${
-          item.telefone || "Sem telefone"
-        }</span>
+          <span><strong>${item.setor}:</strong> ${item.tecnico} - ${item.telefone || "Sem telefone"
+          }</span>
         </div>
       `
       )
@@ -795,3 +789,67 @@ document
       e.target.value = `(${value}`;
     }
   });
+
+
+//relatorios e funcões referentes
+document.addEventListener("DOMContentLoaded", () => {
+  // -----------------------------
+  // Relatórios
+  // -----------------------------
+  const gerarRelatorioBtn = document.getElementById("gerarRelatorio");
+  const downloadPDFBtn = document.getElementById("downloadPDF");
+  const downloadExcelBtn = document.getElementById("downloadExcel");
+  const reportTableBody = document.getElementById("reportTableBody");
+
+  gerarRelatorioBtn.addEventListener("click", async () => {
+    const periodo = document.getElementById("tipoRelatorio").value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tickets/relatorios?tipo=${periodo}`);
+      if (!response.ok) throw new Error("Erro ao gerar relatório");
+
+      const dados = await response.json();
+
+      // Resumo
+      document.getElementById("totalChamados").textContent =
+        dados.resumo.totalChamados;
+      document.getElementById("atendidos").textContent =
+        dados.resumo.atendidos;
+      document.getElementById("naoAtendidos").textContent =
+        dados.resumo.naoAtendidos;
+      document.getElementById("tempoMedio").textContent =
+        dados.resumo.tempoMedioAtendimento || 0;
+
+      // Tabela
+      reportTableBody.innerHTML = "";
+      dados.detalhes.forEach((chamado) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${chamado.id}</td>
+          <td>${chamado.titulo}</td>
+          <td>${chamado.solicitante}</td>
+          <td>${chamado.status}</td>
+          <td>${chamado.dataAbertura}</td>
+          <td>${chamado.dataAtualizacao || "-"}</td>
+          <td>${chamado.tempoAtendimento || "-"}</td>
+        `;
+        reportTableBody.appendChild(tr);
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível carregar o relatório.");
+    }
+  });
+
+  // Download PDF
+  downloadPDFBtn.addEventListener("click", () => {
+    const periodo = document.getElementById("tipoRelatorio").value;
+    window.location.href = `${API_BASE_URL}/tickets/relatorios/pdf?tipo=${periodo}`;
+  });
+
+  // Download Excel
+  downloadExcelBtn.addEventListener("click", () => {
+    const periodo = document.getElementById("tipoRelatorio").value;
+    window.location.href = `${API_BASE_URL}/tickets/relatorios/excel?tipo=${periodo}`;
+  });
+});
