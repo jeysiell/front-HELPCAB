@@ -588,27 +588,32 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && ticketModal.classList.contains("active"))
     closeTicketModal();
 });
+
+
 setorSelect.addEventListener("change", () => {
   detalheContainer.innerHTML = ""; // limpa campos antigos
   const setor = setorSelect.value;
 
-  if (setor === "salas") {
+  if (setor === "salas-ei-efai" || setor === "salas-efaf-em") {
     detalheContainer.innerHTML = `
       <label for="numeroSala">Número da Sala:</label>
-      <input type="text" id="numeroSala" name="detalheSetor" required class="w-full p-2 border rounded">
+      <input type="text" id="numeroSala" name="detalheSetor" 
+             placeholder="Ex: Sala 12" required 
+             class="w-full p-2 border rounded">
     `;
   } else if (setor === "coordenacao") {
     detalheContainer.innerHTML = `
       <label for="tipoCoordenacao">Tipo de Coordenação:</label>
-      <select id="tipoCoordenacao" name="detalheSetor" required class="w-full p-2 border rounded">
+      <select id="tipoCoordenacao" name="detalheSetor" required 
+              class="w-full p-2 border rounded">
         <option value="pedagogica">Pedagógica</option>
-        <option value="orientacao">Orientação</option>
-        <option value="administrativa">Administrativa</option>
-        <option value="outra">Outra</option>
+        <option value="disciplinar">Disciplinar</option>
       </select>
     `;
   }
 });
+
+
 
 // =========================================================
 // 👨‍🔧 Técnicos Functions

@@ -282,13 +282,13 @@
       <section id="secAbrir" class="card section active">
         <h2>Abrir chamado</h2>
         <form id="formAbrir">
-          <label for="solicitante">Seu nome (solicitante)</label>
+          <label for="solicitante">Seu nome</label>
           <input id="solicitante" name="solicitante" required />
 
-          <label for="titulo">Título</label>
+          <label for="titulo">O que está acontecendo?</label>
           <input id="titulo" name="titulo" required />
 
-          <label for="telefoneSolicitante">Telefone</label>
+          <label for="telefoneSolicitante">Seu telefone</label>
           <input
             type="tel"
             id="telefoneSolicitante"
@@ -299,16 +299,16 @@
             onkeypress="return /[0-9]/.test(String.fromCharCode(event.which))"
           />
 
-
           <div class="row">
             <div>
-              <label for="categoria">Categoria</label>
+              <label for="categoria">Tipo de problema</label>
               <select id="categoria" name="categoria" required>
-                <option value="">Selecione…</option>
-                <option value="hardware">Hardware</option>
-                <option value="software">Software</option>
-                <option value="rede">Rede</option>
-                <option value="outros">Outros</option>
+                <option value="">Selecione...</option>
+                <option value="hardware">Computador/Equipamento</option>
+                <option value="software">Programa/Sistema</option>
+                <option value="rede">Internet/Rede</option>
+                <option value="impressora">Impressora</option>
+                <option value="outros">Outro</option>
               </select>
             </div>
             <div>
@@ -316,15 +316,15 @@
               <select id="prioridade" name="prioridade" required>
                 <option value="">Selecione…</option>
                 <option value="baixa">baixa</option>
-                <option value="media">media</option>
-                <option value="alta">alta</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
               </select>
             </div>
           </div>
 
           <div class="row">
             <div>
-              <label for="departamento">Departamento</label>
+              <label for="departamento">Departamento Responsavel</label>
               <input
                 id="departamento"
                 name="departamento"
@@ -336,13 +336,22 @@
             <div>
               <label for="setor">Setor</label>
               <select id="setor" name="setor" required>
-                <option value="">Selecione…</option>
-                <option value="administracao">Administração</option>
-                <option value="salas">Salas</option>
-                <option value="coordenacao">Coordenação</option>
-                <option value="outros">Outros</option>
+                <option value="">Selecione...</option>
+              
+                <optgroup label="Salas de Aula">
+                  <option value="salas-ei-efai">EI - EFAI</option>
+                  <option value="salas-efaf-em">EFAF - EM</option>
+                </optgroup>
+              
+                <optgroup label="Outros Setores">
+                  <option value="coordenacao">Coordenação</option>
+                  <option value="orientacao">Orientação</option>
+                  <option value="administracao">Administração</option>
+                  <option value="outros">Outro</option>
+                </optgroup>
               </select>
             </div>
+
           </div>
 
           <div id="setorDetalheContainer"></div>
@@ -469,38 +478,52 @@
       const setorSelect = $("#setor");
       const detalheContainer = $("#setorDetalheContainer");
       setorSelect.addEventListener("change", () => {
-        detalheContainer.innerHTML = "";
+        detalheContainer.innerHTML = ""; // limpa campos antigos
         const setor = setorSelect.value;
-        if (setor === "salas") {
-          detalheContainer.innerHTML = `<label for="numeroSala">Número da Sala</label><input id="numeroSala" name="detalheSetor" required />`;
+
+        if (setor === "salas-ei-efai" || setor === "salas-efaf-em") {
+          detalheContainer.innerHTML = `
+      <label for="numeroSala">Número da Sala:</label>
+      <input type="text" id="numeroSala" name="detalheSetor" 
+             placeholder="Ex: Sala 12" required 
+             class="w-full p-2 border rounded">
+    `;
         } else if (setor === "coordenacao") {
-          detalheContainer.innerHTML = `<label for="tipoCoordenacao">Tipo de Coordenação</label><select id="tipoCoordenacao" name="detalheSetor" required>
-          <option value="pedagogica">Pedagógica</option>
-          <option value="orientacao">Orientação</option>
-          <option value="administrativa">Administrativa</option>
-          <option value="outra">Outra</option>
-        </select>`;
+          detalheContainer.innerHTML = `
+      <label for="tipoCoordenacao">Tipo de Coordenação:</label>
+      <select id="tipoCoordenacao" name="detalheSetor" required 
+              class="w-full p-2 border rounded">
+        <option value="pedagogica">Pedagógica</option>
+        <option value="disciplinar">Disciplinar</option>
+      </select>
+    `;
         }
       });
 
       // Máscara de telefone (DDD + número)
-      document.getElementById("telefoneSolicitante").addEventListener("input", function (e) {
-        let value = e.target.value.replace(/\D/g, ""); // só números
+      document
+        .getElementById("telefoneSolicitante")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, ""); // só números
 
-        if (value.length > 11) value = value.slice(0, 11); // máximo 11 dígitos
+          if (value.length > 11) value = value.slice(0, 11); // máximo 11 dígitos
 
-        if (value.length > 10) {
-          e.target.value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
-        } else if (value.length > 6) {
-          e.target.value = `(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`;
-        } else if (value.length > 2) {
-          e.target.value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
-        } else if (value.length > 0) {
-          e.target.value = `(${value}`;
-        }
-      });
-
-      
+          if (value.length > 10) {
+            e.target.value = `(${value.slice(0, 2)}) ${value.slice(
+              2,
+              7
+            )}-${value.slice(7, 11)}`;
+          } else if (value.length > 6) {
+            e.target.value = `(${value.slice(0, 2)}) ${value.slice(
+              2,
+              6
+            )}-${value.slice(6)}`;
+          } else if (value.length > 2) {
+            e.target.value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+          } else if (value.length > 0) {
+            e.target.value = `(${value}`;
+          }
+        });
 
       // ABRIR CHAMADO
       $("#formAbrir").addEventListener("submit", async (e) => {

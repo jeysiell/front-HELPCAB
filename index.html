@@ -254,6 +254,7 @@
                 <i class="fas fa-user-plus icon"></i> Adicionar Técnico
               </h3>
 
+<<<<<<< Updated upstream
               <div class="form-group">
                 <label for="setorSelectfor" class="label">Setor</label>
                 <select id="setorSelectfor" class="select">
@@ -263,9 +264,58 @@
                   <option value="administracao">Administração</option>
                   <option value="outros">Outros</option>
                 </select>
+=======
+          <!-- New Ticket Section -->
+          <!-- Novo Chamado -->
+          <section id="newTicketSection" class="content-section">
+            <div class="section-header">
+              <h2>Abrir Chamado</h2>
+            </div>
+          
+            <form id="newTicketForm" class="ticket-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="titulo">O que está acontecendo?</label>
+                  <input
+                    type="text"
+                    id="titulo"
+                    name="titulo"
+                    placeholder="Ex: Computador não liga"
+                    required
+                  />
+                </div>
+              
+                <div class="form-group">
+                  <label for="categoria">Tipo de problema</label>
+                  <select id="categoria" name="categoria" required>
+                    <option value="">Selecione...</option>
+                    <option value="hardware">Computador/Equipamento</option>
+                    <option value="software">Programa/Sistema</option>
+                    <option value="rede">Internet/Rede</option>
+                    <option value="impressora">Impressora</option>
+                    <option value="outros">Outro</option>
+                  </select>
+                </div>
               </div>
-
+            
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="setor">Onde está o problema?</label>
+                  <select id="setor" name="setor" required>
+                    <option value="">Selecione...</option>
+                    <option value="salas-ei-efai">Sala de Aula (EI - EFAI)</option>
+                    <option value="salas-efaf-em">Sala de Aula (EFAF - EM)</option>
+                    <option value="coordenacao">Coordenação</option>
+                    <option value="orientacao">Orientação</option>
+                    <option value="administracao">Administração</option>
+                    <option value="outros">Outro</option>
+                  </select>
+                </div>
+>>>>>>> Stashed changes
+              </div>
+            
               <div class="form-group">
+<<<<<<< Updated upstream
                 <label for="tecnicoInput" class="label">Técnico responsável</label>
                 <select id="tecnicoInput" class="select">
                   <option value="">Selecione o técnico</option>
@@ -281,9 +331,77 @@
 
               <button type="submit" class="submit-button">
                 <i class="fas icon"></i> Salvar
+=======
+                <!-- Campo extra se for necessário -->
+                <div id="setorDetalheContainer"></div>
+              </div>
+            
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prioridade">Urgência</label>
+                  <select id="prioridade" name="prioridade" required>
+                    <option value="">Selecione...</option>
+                    <option value="baixa">Pode esperar</option>
+                    <option value="media">Normal</option>
+                    <option value="alta">Importante</option>
+                    <option value="critica">Muito urgente</option>
+                  </select>
+                </div>
+              
+                <div class="form-group">
+                  <label for="departamento">Departamento responsável</label>
+                  <input type="hidden" name="departamento" value="TI" />
+                  <input
+                    type="text"
+                    value="TI"
+                    disabled
+                    class="w-full p-2 border rounded bg-gray-100"
+                  />
+                </div>
+              </div>
+            
+              <div class="form-group">
+                <label for="solicitante">Seu nome</label>
+                <input
+                  type="text"
+                  id="solicitante"
+                  name="solicitante"
+                  placeholder="Digite seu nome"
+                  required
+                />
+              </div>
+            
+              <div class="form-group">
+                <label for="telefoneSolicitante">Seu telefone</label>
+                <input
+                  type="text"
+                  id="telefoneSolicitante"
+                  name="telefone"
+                  maxlength="15"
+                  placeholder="(99) 99999-9999"
+                  required
+                />
+              </div>
+            
+              <div class="form-group">
+                <label for="descricao">Explique melhor o problema</label>
+                <textarea
+                  id="descricao"
+                  name="descricao"
+                  rows="4"
+                  placeholder="Ex: O computador não liga mesmo conectado na tomada"
+                  required
+                ></textarea>
+              </div>
+            
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Enviar Chamado
+>>>>>>> Stashed changes
               </button>
             </form>
 
+<<<<<<< Updated upstream
             <!-- Lista -->
             <div class="row-tec">
               <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
@@ -291,6 +409,72 @@
             </div>
           </div>
         </section>
+=======
+
+          <!-- Admin Setores Section -->
+          <!-- Admin Setores Section -->
+          <section
+            id="adminSetoresSection"
+            class="adminsection content-section"
+          >
+            <div class="header">
+              <i class="fas fa-cogs icon"></i>
+              <h2 class="title">Configuração de Técnicos por Setor</h2>
+            </div>
+          
+            <div class="row-list">
+              <!-- Form -->
+              <form id="setorTecnicoForm" class="tecnico-form">
+                <h3 class="form-title">
+                  <i class="fas fa-user-plus icon"></i> Adicionar Técnico
+                </h3>
+              
+                <div class="form-group">
+                  <label for="setorSelectfor" class="label">Setor</label>
+                  <select id="setorSelectfor" class="select">
+                    <option value="">Selecione...</option>
+                    <option value="salas-ei-efai">Sala de Aula (EI - EFAI)</option>
+                    <option value="salas-efaf-em">Sala de Aula (EFAF - EM)</option>
+                    <option value="coordenacao">Coordenação</option>
+                    <option value="orientacao">Orientação</option>
+                    <option value="administracao">Administração</option>
+                    <option value="outros">Outro</option>
+                  </select>
+                </div>
+              
+                <div class="form-group">
+                  <label for="tecnicoInput" class="label">Técnico responsável</label>
+                  <select id="tecnicoInput" class="select">
+                    <option value="">Selecione o técnico</option>
+                  </select>
+                </div>
+              
+                <!-- 👇 Campo telefone extra -->
+                <div class="form-group">
+                  <label for="telefoneInput" class="label">Telefone</label>
+                  <input
+                    type="text"
+                    id="telefoneInput"
+                    class="input"
+                    placeholder="Telefone do técnico"
+                    readonly
+                  />
+                </div>
+
+              
+                <button type="submit" class="submit-button">
+                  <i class="fas icon"></i> Salvar
+                </button>
+              </form>
+            
+              <!-- Lista -->
+              <div class="row-tec">
+                <h3 class="tecnicos-title">Responsáveis por Setor:</h3>
+                <div id="tecnicosList" class="tecnicos-list"></div>
+              </div>
+            </div>
+          </section>
+>>>>>>> Stashed changes
 
 
 
@@ -394,10 +578,33 @@
 
           </div>
 
+<<<<<<< Updated upstream
           <form id="commentForm" class="comment-form">
             <div class="form-group">
               <label for="commentAutor">Autor</label>
               <input type="text" id="commentAutor" name="autor" required />
+=======
+          <div class="ticket-actions">
+            <div class="status-update" id="statusUpdate">
+              <label for="newStatus">Status:</label>
+              <select id="newStatus">
+                <option value="aberto">Aberto</option>
+                <option value="Em_andamento">Em Andamento</option>
+                <option value="concluido">Concluido</option>
+                <option value="cancelado">cancelado</option>
+              </select>
+
+              <label for="tecnicoResponsavel">Técnico:</label>
+              <input
+                type="text"
+                id="tecnicoResponsavel"
+                placeholder="Nome do técnico"
+              />
+
+              <button id="updateStatus" class="btn btn-primary">
+                Atualizar
+              </button>
+>>>>>>> Stashed changes
             </div>
             <div class="form-group">
               <label for="commentTexto">Comentário</label>
