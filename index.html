@@ -146,12 +146,37 @@
               Atualizar
             </button>
           </div>
+          <div class="filters">
+          <!-- Filtro por Status -->
+          <select id="statusFilter" class="filter-select">
+            <option id="refreshTickets" value="todos">Todos</option>
+            <option id="refreshTickets" value="Aberto">Aberto</option>
+            <option id="refreshTickets" value="Em Andamento">Em Andamento</option>
+            <option id="refreshTickets" value="Concluído">Concluído</option>
+            <option id="refreshTickets" value="Cancelado">Cancelado</option>
+          </select>
 
-          <div class="tickets-container">
-            <div id="ticketsList" class="tickets-list">
+        
+          <!-- Filtro por Data -->
+          <input type="date" id="dateFilter" class="filter-input" />
+        
+          <!-- Pesquisa por Solicitante -->
+          <input
+            type="text"
+            id="searchFilter"
+            placeholder="Pesquisar por solicitante..."    
+            class="filter-input"
+          />
+            <!-- Botão de Limpar -->
+          <button id="clearFilters" class="btn btn-secondary">Limpar</button>
+        </div>
 
-            </div>
+
+        <div class="tickets-container">
+          <div id="ticketsList" class="tickets-list">
+            <!-- Tickets will be loaded here -->
           </div>
+        </div>
         </section>
         <!-- New Ticket Section -->
           <!-- Novo Chamado -->
@@ -214,7 +239,7 @@
                     <option value="baixa">Pode esperar</option>
                     <option value="media">Normal</option>
                     <option value="alta">Importante</option>
-                    <option value="critica">Muito urgente</option>
+                    
                   </select>
                 </div>
               
@@ -413,7 +438,7 @@
 
         </div>
 
-        <div class="ticket-actions">
+        <!-- <div class="ticket-actions">
           <div class="status-update" id="statusUpdate">
             <label for="newStatus">Status:</label>
             <select id="newStatus">
@@ -430,7 +455,7 @@
               Atualizar
             </button>
           </div>
-        </div>
+        </div> -->
 
         <div class="comments-section">
           <h4>Comentários</h4>
@@ -448,12 +473,15 @@
                 <option value="cancelado">cancelado</option>
               </select>
 
+            <form action="#" id="commentForm" class="comment-form">
               <label for="tecnicoResponsavel">Técnico:</label>
               <input
                 type="text"
                 id="tecnicoResponsavel"
+                name="autor"
                 placeholder="Nome do técnico"
               />
+
 
               <button id="updateStatus" class="btn btn-primary">
                 Atualizar

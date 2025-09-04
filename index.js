@@ -207,20 +207,24 @@ function logout() {
 async function loadTickets() {
   try {
     const tickets = await apiRequest("/tickets");
-    displayTickets(tickets);
+    allTickets = tickets; // ⚡ atualiza a base global
+    displayTickets(allTickets); // exibe já com filtros aplicados
   } catch (error) {
     console.error("Erro ao carregar chamados:", error);
   }
 }
 
 function displayTickets(tickets) {
+  const filteredTickets = applyFilters(tickets);
+
   ticketsList.innerHTML = "";
-  if (tickets.length === 0) {
+  if (filteredTickets.length === 0) {
     ticketsList.innerHTML =
       '<div class="no-tickets">Nenhum chamado encontrado</div>';
     return;
   }
-  tickets.forEach((ticket) => {
+
+  filteredTickets.forEach(ticket => {
     const ticketElement = document.createElement("div");
     ticketElement.className = "ticket-item";
     ticketElement.onclick = () => openTicketModal(ticket.id);
@@ -236,16 +240,91 @@ function displayTickets(tickets) {
           </div>
         </div>
         <div>
-          <span class="ticket-status ${getStatusClass(ticket.status)}">${ticket.status
-      }</span>
-          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">${ticket.prioridade
-      }</span>
+          <span class="ticket-status ${getStatusClass(ticket.status)}">
+            ${ticket.status}
+          </span>
+          <span class="priority-badge ${getPriorityClass(ticket.prioridade)}">
+            ${ticket.prioridade}
+          </span>
         </div>
       </div>
     `;
     ticketsList.appendChild(ticketElement);
   });
 }
+
+// filtros
+function applyFilters(tickets) {
+  const statusValue = document.getElementById("statusFilter").value;
+  const dateValue = document.getElementById("dateFilter").value; // yyyy-mm-dd
+  const searchValue = document.getElementById("searchFilter").value.toLowerCase();
+
+  return tickets.filter(ticket => {
+    // Filtro por Status
+    const matchStatus =
+      statusValue === "todos" || ticket.status === statusValue;
+
+    // Filtro por Data
+    const ticketDate = ticket.dataAbertura.split("T")[0]; // "2025-09-04"
+    const matchDate = !dateValue || ticketDate === dateValue;
+
+    // Filtro por Nome do Solicitante
+    const matchSearch = ticket.solicitante.toLowerCase().includes(searchValue);
+    
+    return matchStatus && matchDate && matchSearch;
+  });
+}
+
+
+// Quando o usuário mudar o status
+document.getElementById("statusFilter").addEventListener("change", () => {
+  displayTickets(allTickets);
+});
+
+// Quando o usuário escolher uma data
+document.getElementById("dateFilter").addEventListener("input", () => {
+  displayTickets(allTickets);
+});
+
+// Quando o usuário digitar na pesquisa
+document.getElementById("searchFilter").addEventListener("input", () => {
+  displayTickets(allTickets);
+});
+
+
+let allTickets = [];
+
+async function fetchTickets() {
+  try {
+    const res = await fetch("https://helpcab-1.onrender.com/api/tickets");
+    allTickets = await res.json();
+    displayTickets(allTickets); // mostra inicial
+  } catch (err) {
+    console.error("Erro ao buscar tickets:", err);
+  }
+}
+
+
+document.getElementById("clearFilters").addEventListener("click", () => {
+  // Resetar valores
+  document.getElementById("statusFilter").value = "todos";
+  document.getElementById("dateFilter").value = "";
+  document.getElementById("searchFilter").value = "";
+
+  // Mostrar todos os tickets novamente
+  displayTickets(allTickets);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchTickets(); // carrega os tickets ao abrir a página
+});
+
+// botão de atualizar
+document.getElementById("refreshTickets").addEventListener("click", () => {
+  fetchTickets();
+});
+
+
 
 async function createTicket(ticketData) {
   try {
@@ -276,12 +355,14 @@ async function updateTicketStatus(ticketId, status, tecnicoResponsavel) {
       body: JSON.stringify({ status, tecnicoResponsavel }),
     });
     showToast("Status atualizado com sucesso!", "success");
-    loadTickets();
-    openTicketModal(ticketId);
+
+    await loadTickets(); // ⚡ atualiza todos os tickets e filtros
+    openTicketModal(ticketId); // reabre modal atualizado
   } catch (error) {
     console.error("Erro ao atualizar status:", error);
   }
 }
+
 
 // =========================================================
 // 🪟 Modal Functions
