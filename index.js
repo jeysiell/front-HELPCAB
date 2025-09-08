@@ -878,64 +878,105 @@ document
 
 
 //relatorios e funcões referentes
-document.addEventListener("DOMContentLoaded", () => {
-  // -----------------------------
-  // Relatórios
-  // -----------------------------
-  const gerarRelatorioBtn = document.getElementById("gerarRelatorio");
-  const downloadPDFBtn = document.getElementById("downloadPDF");
-  const downloadExcelBtn = document.getElementById("downloadExcel");
-  const reportTableBody = document.getElementById("reportTableBody");
+// ======================
+// Relatórios
+// ======================
+const gerarRelatorioBtn = document.getElementById("gerarRelatorio");
+const downloadPDFBtn = document.getElementById("downloadPDF");
+const downloadExcelBtn = document.getElementById("downloadExcel");
+const reportTableBody = document.getElementById("reportTableBody");
+const ctx = document.getElementById("graficoRelatorio").getContext("2d");
 
-  gerarRelatorioBtn.addEventListener("click", async () => {
-    const periodo = document.getElementById("tipoRelatorio").value;
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/tickets/relatorios?tipo=${periodo}`);
-      if (!response.ok) throw new Error("Erro ao gerar relatório");
-
-      const dados = await response.json();
-
-      // Resumo
-      document.getElementById("totalChamados").textContent =
-        dados.resumo.totalChamados;
-      document.getElementById("atendidos").textContent =
-        dados.resumo.atendidos;
-      document.getElementById("naoAtendidos").textContent =
-        dados.resumo.naoAtendidos;
-      document.getElementById("tempoMedio").textContent =
-        dados.resumo.tempoMedioAtendimento || 0;
-
-      // Tabela
-      reportTableBody.innerHTML = "";
-      dados.detalhes.forEach((chamado) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${chamado.id}</td>
-          <td>${chamado.titulo}</td>
-          <td>${chamado.solicitante}</td>
-          <td>${chamado.status}</td>
-          <td>${chamado.dataAbertura}</td>
-          <td>${chamado.dataAtualizacao || "-"}</td>
-          <td>${chamado.tempoAtendimento || "-"}</td>
-        `;
-        reportTableBody.appendChild(tr);
-      });
-    } catch (err) {
-      console.error(err);
-      alert("Não foi possível carregar o relatório.");
-    }
-  });
-
-  // Download PDF
-  downloadPDFBtn.addEventListener("click", () => {
-    const periodo = document.getElementById("tipoRelatorio").value;
-    window.location.href = `${API_BASE_URL}/tickets/relatorios/pdf?tipo=${periodo}`;
-  });
-
-  // Download Excel
-  downloadExcelBtn.addEventListener("click", () => {
-    const periodo = document.getElementById("tipoRelatorio").value;
-    window.location.href = `${API_BASE_URL}/tickets/relatorios/excel?tipo=${periodo}`;
-  });
+let graficoPizza = new Chart(ctx, {
+  type: "pie",
+  data: {
+    labels: ["Atendidos", "Não Atendidos"],
+    datasets: [
+      {
+        label: "Chamados",
+        data: [0, 0],
+        backgroundColor: ["#4CAF50", "#F44336"],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: "bottom" } },
+  },
 });
+
+async function gerarRelatorio() {
+  const periodo = document.getElementById("tipoRelatorio").value;
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/tickets/relatorios?tipo=${periodo}`
+    );
+    if (!response.ok) throw new Error("Erro ao gerar relatório");
+
+    const dados = await response.json();
+
+    // Resumo
+    document.getElementById("totalChamados").textContent =
+      dados.resumo.totalChamados;
+    document.getElementById("atendidos").textContent = dados.resumo.atendidos;
+    document.getElementById("naoAtendidos").textContent =
+      dados.resumo.naoAtendidos;
+    document.getElementById("tempoMedio").textContent =
+      dados.resumo.tempoMedioAtendimento || 0;
+
+    // Atualiza gráfico
+    graficoPizza.data.datasets[0].data = [
+      dados.resumo.atendidos,
+      dados.resumo.naoAtendidos,
+    ];
+    graficoPizza.update();
+
+    // Tabela
+    reportTableBody.innerHTML = "";
+    dados.detalhes.forEach((chamado) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${chamado.id}</td>
+        <td>${chamado.titulo}</td>
+        <td>${chamado.solicitante}</td>
+        <td>${chamado.status}</td>
+        <td>${chamado.dataAbertura}</td>
+        <td>${chamado.dataAtualizacao || "-"}</td>
+        <td>${chamado.tempoAtendimento || "-"}</td>
+      `;
+      reportTableBody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Não foi possível carregar o relatório.");
+  }
+}
+
+// Eventos
+gerarRelatorioBtn.addEventListener("click", gerarRelatorio);
+downloadPDFBtn.addEventListener("click", () => {
+  const periodo = document.getElementById("tipoRelatorio").value;
+  window.location.href = `${API_BASE_URL}/tickets/relatorios/pdf?tipo=${periodo}`;
+});
+downloadExcelBtn.addEventListener("click", () => {
+  const periodo = document.getElementById("tipoRelatorio").value;
+  window.location.href = `${API_BASE_URL}/tickets/relatorios/excel?tipo=${periodo}`;
+});
+
+// ======================
+// Integrar com navegação
+// ======================
+
+// Sobrescreve a função showSection para rodar relatório
+const originalShowSection = showSection;
+showSection = function (sectionName) {
+  originalShowSection(sectionName);
+
+  // se ativar relatórios → gera automaticamente
+  if (sectionName === "relatorios") {
+    document.getElementById("tipoRelatorio").value = "diario";
+    gerarRelatorio();
+  }
+};
